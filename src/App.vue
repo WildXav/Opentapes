@@ -1,3 +1,5 @@
+<style src="./styles/styles.scss" lang="scss"></style>
+
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> |
@@ -6,25 +8,18 @@
   <router-view />
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+import { Vue } from "vue-class-component";
+import store from "@/store";
 
-#nav {
-  padding: 30px;
+export default class App extends Vue {
+  mounted(): void {
+    window.addEventListener("resize", this.onResize);
+    this.onResize();
+  }
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  onResize(): void {
+    store.dispatch.updateBreakpoints();
   }
 }
-</style>
+</script>
