@@ -2,6 +2,10 @@
   "name": "opentapes",
   "version": "0.1.0",
   "private": true,
+  "license": "GPL-3.0-only",
+  "repository": "https://codeberg.org/xaviers/OpenTapes",
+  "author": "Xavier Saliniere <xavier.saliniere@pm.me> (https://xaviers.sh)",
+
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

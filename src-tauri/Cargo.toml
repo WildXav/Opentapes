@@ -1,15 +1,15 @@
 [package]
-name = "app"
+name = "opentapes"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
-license = ""
-repository = ""
-default-run = "app"
+description = "Listen to Hip-Hop mixtapes, albums & songs on desktop, tablet, and Linux phone."
+authors = ["Xavier Saliniere <xavier.saliniere@pm.me>"]
+license = "GPL-3.0-only"
+readme = "../README.md"
+repository = "https://codeberg.org/xaviers/OpenTapes"
+default-run = "opentapes"
 edition = "2018"
 build = "src/build.rs"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+publish = false
 
 [build-dependencies]
 tauri-build = { version = "1.0.0-beta.3" }
