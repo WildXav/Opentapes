@@ -1,7 +1,7 @@
 [package]
 name = "opentapes"
 version = "0.1.0"
-description = "Listen to Hip-Hop mixtapes, albums & songs on desktop, tablet, and Linux phone."
+description = "A convergent app for listening to Hip-Hop music. Made with Vue.js & Tauri."
 authors = ["Xavier Saliniere <xavier.saliniere@pm.me>"]
 license = "GPL-3.0-only"
 readme = "../README.md"

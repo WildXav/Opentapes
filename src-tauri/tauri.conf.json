@@ -25,8 +25,7 @@
       "externalBin": [],
       "copyright": "GPL-3.0-only",
       "category": "Music",
-      "shortDescription": "Listen to Hip-Hop mixtapes, albums & songs on desktop, tablet, and Linux phone.",
-      "longDescription": "TODO",
+      "shortDescription": "A convergent app for listening to Hip-Hop music. Made with Vue.js & Tauri.",
       "deb": {
         "depends": [],
         "useBootstrapper": false
