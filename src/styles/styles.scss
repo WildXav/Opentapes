@@ -1,7 +1,15 @@
 @import '~element-plus/lib/theme-chalk/index.css';
 @import '~element-plus/lib/theme-chalk/display.css';
 
+html, body, #app {
+  width: 100%;
+  height: 100%;
+}
+
 body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   margin: 0;
 }
 
