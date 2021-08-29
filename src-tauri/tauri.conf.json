@@ -25,7 +25,7 @@
       "externalBin": [],
       "copyright": "GPL-3.0-only",
       "category": "Music",
-      "shortDescription": "A convergent app for listening to Hip-Hop music. Made with Vue.js & Tauri.",
+      "shortDescription": "A convergent app for streaming Hip-Hop music. Made with Vue.js & Tauri.",
       "deb": {
         "depends": [],
         "useBootstrapper": false
