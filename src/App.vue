@@ -10,7 +10,7 @@
 
       <el-container>
         <el-header>
-          <Header @show-drawer="showDrawer = true"></Header>
+          <Header @show-drawer="isDrawerVisible = true"></Header>
         </el-header>
         <router-view />
       </el-container>
@@ -22,12 +22,17 @@
   <!--  TODO: Disable in desktop mode  -->
   <el-drawer
     v-if="true"
-    v-model="showDrawer"
-    :direction="'ltr'"
+    v-model="isDrawerVisible"
+    direction="ltr"
     :with-header="false"
   >
     <Sidenav></Sidenav>
   </el-drawer>
+
+  <SessionDialog
+    :session-loading="isLoadingSession()"
+    @session-loaded="onSessionLoaded($event)"
+  ></SessionDialog>
 </template>
 
 <script lang="ts">
@@ -35,19 +40,31 @@ import { Options, Vue } from "vue-class-component";
 import store from "@/store";
 import Header from "@/components/Header.vue";
 import Sidenav from "@/components/Sidenav.vue";
+import SessionDialog from "@/components/SessionDialog.vue";
+import { MMSession } from "@/models/backend/mm-session";
 
 @Options({
   components: {
     Header,
+    SessionDialog,
     Sidenav,
   },
 })
 export default class App extends Vue {
-  showDrawer = false;
+  isDrawerVisible = false;
 
   mounted(): void {
     window.addEventListener("resize", this.onResize);
     this.onResize();
+    store.dispatch.loadSession();
+  }
+
+  isLoadingSession(): boolean {
+    return store.getters.loadingSession;
+  }
+
+  onSessionLoaded(result: MMSession): void {
+    store.dispatch.setSession(result);
   }
 
   onResize(): void {
