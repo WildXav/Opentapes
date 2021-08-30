@@ -9,12 +9,16 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
+enum Events {
+  ShowDrawer = "showDrawer",
+}
+
 @Options({
-  emits: ["showDrawer"],
+  emits: [Events.ShowDrawer],
 })
 export default class Header extends Vue {
   showDrawer(): void {
-    this.$emit("showDrawer");
+    this.$emit(Events.ShowDrawer);
   }
 }
 </script>
