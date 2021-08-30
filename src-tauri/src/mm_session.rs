@@ -12,19 +12,28 @@ pub(crate) struct MMSession {
 }
 
 impl MMSession {
-    pub fn request() -> Result<MMSession, Error> {
-        let resp = reqwest::blocking::get(MY_MIXTAPEZ_URL)
-            .map_err(|_| Error::new_detailed(
-                ErrorReason::RequestFailed, format!("failed to reach {}", MY_MIXTAPEZ_URL)
+    pub async fn request() -> Result<MMSession, Error> {
+        let resp = reqwest::get(MY_MIXTAPEZ_URL).await
+            .map_err(|e| Error::new(
+                ErrorReason::SessionFetchingFailed, e.to_string()
             ))?;
         let headers = resp.headers().clone();
-        let body = resp.text()
-            .map_err(|_| Error::new(ErrorReason::UnexpectedMMResponse))?;
+        let body = resp.text().await
+            .map_err(|_| Error::new(
+                ErrorReason::SessionFetchingFailed,
+                String::from("unable to get response body")
+            ))?;
 
         let cookie = MMSession::extract_cookie(&headers)
-            .ok_or_else(|| Error::new(ErrorReason::MissingMMSessionCookie))?;
+            .ok_or_else(|| Error::new(
+                ErrorReason::SessionFetchingFailed,
+                String::from("failed to extract cookie")
+            ))?;
         let verifier = MMSession::extract_verifier(&body)
-            .ok_or_else(|| Error::new(ErrorReason::MissingMMSessionVerifier))?;
+            .ok_or_else(|| Error::new(
+                ErrorReason::SessionFetchingFailed,
+                String::from("failed to extract verifier")
+            ))?;
 
         Ok(MMSession {
             cookie,

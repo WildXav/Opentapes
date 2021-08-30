@@ -29,30 +29,20 @@ impl Serialize for Error {
 }
 
 impl Error {
-    pub fn new(reason: ErrorReason) -> Error {
-        Error { reason, details: Option::None }
-    }
-
-    pub fn new_detailed(reason: ErrorReason, details: String) -> Error {
+    pub fn new(reason: ErrorReason, details: String) -> Error {
         Error { reason, details: Option::Some(details) }
     }
 }
 
 #[derive(Debug, Serialize)]
 pub(crate) enum ErrorReason {
-    MissingMMSessionCookie,
-    MissingMMSessionVerifier,
-    RequestFailed,
-    UnexpectedMMResponse,
+    SessionFetchingFailed,
 }
 
 impl ErrorReason {
     pub fn as_str(&self) -> &'static str {
         match *self {
-            ErrorReason::MissingMMSessionCookie => "Missing MyMixtapez session cookie",
-            ErrorReason::MissingMMSessionVerifier => "Missing MyMixtapez session verifier",
-            ErrorReason::RequestFailed => "Request failed",
-            ErrorReason::UnexpectedMMResponse => "Unexpected MyMixtapez response",
+            ErrorReason::SessionFetchingFailed => "Session fetching failed",
         }
     }
 }
