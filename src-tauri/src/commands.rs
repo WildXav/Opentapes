@@ -5,7 +5,10 @@ use crate::error::Error;
 //noinspection RsWrongGenericArgumentsNumber
 #[command]
 pub(crate) fn show_window(window: Window) {
-    window.get_window("main").unwrap().show().unwrap();
+    window.get_window("main")
+        .unwrap_or_else(|| panic!("unable to retrieve main window"))
+        .show()
+        .unwrap_or_else(|_| panic!("unable to show main window"));
 }
 
 #[command]
