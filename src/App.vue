@@ -37,11 +37,13 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import { invoke } from "@tauri-apps/api";
 import store from "@/store";
 import Header from "@/components/Header.vue";
 import Sidenav from "@/components/Sidenav.vue";
 import SessionDialog from "@/components/SessionDialog.vue";
 import { MMSession } from "@/models/backend/mm-session";
+import { Commands } from "@/models/backend/commands";
 
 @Options({
   components: {
@@ -54,6 +56,7 @@ export default class App extends Vue {
   isDrawerVisible = false;
 
   mounted(): void {
+    invoke(Commands.ShowWindow);
     window.addEventListener("resize", this.onResize);
     this.onResize();
     store.dispatch.loadSession();

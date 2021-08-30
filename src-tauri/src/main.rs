@@ -9,7 +9,10 @@ mod mm_session;
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![commands::request_new_session])
+        .invoke_handler(tauri::generate_handler![
+            commands::request_new_session,
+            commands::show_window
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
