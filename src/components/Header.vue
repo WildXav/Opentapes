@@ -1,16 +1,5 @@
 <template>
   <div id="header">
-    <el-button
-      @click="showDrawer"
-      id="navBtn"
-      class="icon-button"
-      size="medium"
-      circle
-      plain
-    >
-      <font-awesome-icon icon="bars" size="2x"></font-awesome-icon>
-    </el-button>
-
     <div class="title">
       <el-link
         href="#"
@@ -74,11 +63,6 @@ export default class Header extends Vue {
   display: flex;
   align-items: center;
   height: 100%;
-}
-
-#navBtn {
-  border: none;
-  margin-right: 3px;
 }
 
 .title {

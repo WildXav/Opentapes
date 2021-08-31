@@ -21,15 +21,17 @@ body {
 }
 
 // TODO: those padding are only for mobile display
-.el-header, el-footer {
-  padding: 0 5px;
-}
-.el-main {
-  padding: 20px 10px;
+.el-header, .el-main, .el-footer {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .el-header {
   border-bottom: var(--el-border-base);
+}
+
+.el-footer {
+  border-top: var(--el-border-base);
 }
 
 .el-dialog {
@@ -38,4 +40,16 @@ body {
 
 .icon-button > span {
   display: flex;
+}
+
+.el-menu--collapse {
+  width: 54px;
+
+  > .el-menu-item, > .el-submenu {
+    text-align: center;
+  }
+}
+
+.el-submenu.is-active .el-submenu__title {
+  color: var(--el-color-primary);
 }

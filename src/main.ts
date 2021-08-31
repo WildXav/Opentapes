@@ -6,13 +6,26 @@ import store from "./store";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
-  faBars,
   faChevronRight,
   faSpinner,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBookmark,
+  faCaretSquareRight,
+  faClock,
+  faPlayCircle,
+} from "@fortawesome/free-regular-svg-icons";
 
-library.add(faSpinner, faTimes, faBars, faChevronRight);
+library.add(
+  faBookmark,
+  faCaretSquareRight,
+  faChevronRight,
+  faClock,
+  faPlayCircle,
+  faSpinner,
+  faTimes
+);
 
 createApp(App)
   .use(store.original)

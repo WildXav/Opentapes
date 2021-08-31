@@ -3,10 +3,7 @@
 <template>
   <el-container class="wrapper">
     <el-container>
-      <!--  TODO: Enable in desktop mode  -->
-      <el-aside v-if="false">
-        <Sidenav></Sidenav>
-      </el-aside>
+      <Sidenav></Sidenav>
 
       <el-container>
         <el-header>
@@ -27,16 +24,6 @@
 
     <el-footer></el-footer>
   </el-container>
-
-  <!--  TODO: Disable in desktop mode  -->
-  <el-drawer
-    v-if="true"
-    v-model="isDrawerVisible"
-    direction="ltr"
-    :with-header="false"
-  >
-    <Sidenav></Sidenav>
-  </el-drawer>
 
   <SessionDialog
     :session-loading="isLoadingSession()"
