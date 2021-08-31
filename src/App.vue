@@ -10,9 +10,18 @@
 
       <el-container>
         <el-header>
-          <Header @show-drawer="isDrawerVisible = true"></Header>
+          <Header
+            :primary-view-title="primaryViewTitle()"
+            :secondary-view-title="secondaryViewTitle()"
+            :show-secondary-view="showSecondaryView()"
+            @show-drawer="isDrawerVisible = true"
+            @toggle-secondary-view="toggleSecondaryView($event)"
+          ></Header>
         </el-header>
-        <router-view />
+
+        <el-main>
+          <router-view />
+        </el-main>
       </el-container>
     </el-container>
 
@@ -63,7 +72,23 @@ export default class App extends Vue {
   }
 
   isLoadingSession(): boolean {
-    return store.getters.loadingSession;
+    return store.getters.isLoadingSession;
+  }
+
+  primaryViewTitle(): string | null {
+    return store.getters.primaryViewTitle;
+  }
+
+  secondaryViewTitle(): string | null {
+    return store.getters.secondaryViewTitle;
+  }
+
+  showSecondaryView(): boolean {
+    return store.getters.showSecondaryView;
+  }
+
+  toggleSecondaryView(showView: boolean): void {
+    store.dispatch.toggleSecondaryView(showView);
   }
 
   onSessionLoaded(result: MMSession): void {
