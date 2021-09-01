@@ -2,10 +2,8 @@
   "name": "opentapes",
   "version": "0.1.0",
   "private": true,
-  "license": "GPL-3.0-only",
-  "repository": "https://codeberg.org/xaviers/OpenTapes",
-  "author": "Xavier Saliniere <xavier.saliniere@pm.me> (https://xaviers.sh)",
   "description": "A convergent app for streaming Hip-Hop music. Made with Vue.js & Tauri.",
+  "author": "Xavier Saliniere <xavier.saliniere@pm.me> (https://xaviers.sh)",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -16,7 +14,6 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/vue-fontawesome": "^3.0.0-4",
     "@tauri-apps/api": "^1.0.0-beta.8",
@@ -49,8 +46,13 @@
     "prettier": "^2.2.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
+    "svgo": "^1.1.0",
+    "svgo-loader": "^2.1.0",
     "typescript": "~4.1.5",
+    "vue-cli-plugin-svg-sprite": "~1.1.0",
     "vue-cli-plugin-tauri": "~1.0.0-beta.6",
     "vue-jest": "^5.0.0-0"
-  }
+  },
+  "license": "GPL-3.0-only",
+  "repository": "https://codeberg.org/xaviers/OpenTapes"
 }

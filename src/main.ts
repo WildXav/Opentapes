@@ -10,22 +10,8 @@ import {
   faSpinner,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faBookmark,
-  faCaretSquareRight,
-  faClock,
-  faPlayCircle,
-} from "@fortawesome/free-regular-svg-icons";
 
-library.add(
-  faBookmark,
-  faCaretSquareRight,
-  faChevronRight,
-  faClock,
-  faPlayCircle,
-  faSpinner,
-  faTimes
-);
+library.add(faChevronRight, faSpinner, faTimes);
 
 createApp(App)
   .use(store.original)
