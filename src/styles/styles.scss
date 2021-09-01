@@ -42,15 +42,3 @@ body {
 .icon-button > span {
   display: flex;
 }
-
-.el-menu--collapse {
-  width: 54px;
-
-  > .el-menu-item, > .el-submenu {
-    text-align: center;
-  }
-}
-
-.el-submenu.is-active .el-submenu__title {
-  color: var(--el-color-primary);
-}

@@ -1,45 +1,44 @@
 <template>
   <el-menu
-    :default-active="'/featured'"
+    :default-active="$route.path"
+    id="navMenu"
     class="el-menu-vertical-demo"
     :collapse="true"
     router
   >
-    <el-menu-item :index="'/featured'">
-      <font-awesome-icon :icon="['far', 'bookmark']"></font-awesome-icon>
-      <template #title>Featured</template>
-    </el-menu-item>
-    <el-menu-item :index="'/latest'">
-      <font-awesome-icon :icon="['far', 'clock']"></font-awesome-icon>
-      <template #title>Latest</template>
-    </el-menu-item>
+    <template v-for="item in routes" :key="item.name">
+      <el-submenu v-if="'routes' in item" :index="item.id">
+        <template #title>
+          <svg-icon :name="item.iconName"></svg-icon>
+          <span>{{ item.name }}</span>
+        </template>
 
-    <el-submenu index="3">
-      <template #title>
-        <font-awesome-icon
-          :icon="['far', 'caret-square-right']"
-        ></font-awesome-icon>
-        <span>Browse Tapes</span>
-      </template>
-      <el-menu-item index="/trending-tapes">Trending Tapes</el-menu-item>
-      <el-menu-item index="/best-tapes">Best Tapes</el-menu-item>
-    </el-submenu>
+        <template v-for="child in item.routes" :key="child.name">
+          <el-menu-item :index="child.path">{{ child.name }}</el-menu-item>
+        </template>
+      </el-submenu>
 
-    <el-submenu index="4">
-      <template #title>
-        <font-awesome-icon :icon="['far', 'play-circle']"></font-awesome-icon>
-        <span>Browse Songs</span>
-      </template>
-      <el-menu-item index="/trending-songs">Trending Songs</el-menu-item>
-      <el-menu-item index="/best-songs">Best Songs</el-menu-item>
-    </el-submenu>
+      <el-menu-item v-else :index="item.alias || item.path">
+        <svg-icon :name="item.iconName"></svg-icon>
+        <template #title>{{ item.name }}</template>
+      </el-menu-item>
+    </template>
   </el-menu>
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
+import { Options, Vue } from "vue-class-component";
+import SvgIcon from "@/components/SvgIcon.vue";
+import { ROUTES } from "@/router/routes";
 
+@Options({
+  components: {
+    SvgIcon,
+  },
+})
 export default class Sidenav extends Vue {
+  routes = ROUTES;
+
   mounted(): void {
     // remove menu poppers
     document
@@ -52,4 +51,31 @@ export default class Sidenav extends Vue {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+#navMenu {
+  &.el-menu--collapse {
+    width: 54px;
+    min-width: 54px;
+    max-width: 54px;
+
+    > .el-menu-item,
+    > .el-submenu {
+      text-align: center;
+    }
+  }
+
+  .el-menu-item > div,
+  .el-submenu__title {
+    padding: 0 !important;
+  }
+
+  .el-submenu.is-active .el-submenu__title {
+    color: var(--el-color-primary);
+  }
+
+  .svg-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+</style>
