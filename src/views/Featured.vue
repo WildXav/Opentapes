@@ -1,12 +1,7 @@
 <template>Featured view works</template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
-import store from "@/store";
+import View from "@/views/View.vue";
 
-export default class Featured extends Vue {
-  mounted(): void {
-    store.dispatch.setPrimaryViewTitle("Featured");
-  }
-}
+export default class Featured extends View {}
 </script>

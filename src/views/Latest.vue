@@ -1,12 +1,7 @@
 <template>Latest view works</template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
-import store from "@/store";
+import View from "@/views/View.vue";
 
-export default class Latest extends Vue {
-  mounted(): void {
-    store.dispatch.setPrimaryViewTitle("Latest");
-  }
-}
+export default class Latest extends View {}
 </script>
