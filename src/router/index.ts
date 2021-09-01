@@ -1,48 +1,13 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Featured from "../views/Featured.vue";
+import { ROUTES, RouteGroup } from "@/router/routes";
 
-const routes: Array<RouteRecordRaw> = [
-  {
-    path: "/featured",
-    alias: "/",
-    name: "Featured",
-    component: Featured,
-  },
-  {
-    path: "/latest",
-    name: "Latest",
-    component: () =>
-      import(/* webpackChunkName: "latest" */ "../views/Latest.vue"),
-  },
-  {
-    path: "/trending-tapes",
-    name: "TrendingTapes",
-    component: () =>
-      import(
-        /* webpackChunkName: "trending-albums" */ "../views/TrendingTapes.vue"
-      ),
-  },
-  {
-    path: "/best-tapes",
-    name: "BestTapes",
-    component: () =>
-      import(/* webpackChunkName: "best-albums" */ "../views/BestTapes.vue"),
-  },
-  {
-    path: "/trending-songs",
-    name: "TrendingSongs",
-    component: () =>
-      import(
-        /* webpackChunkName: "trending-singles" */ "../views/TrendingSongs.vue"
-      ),
-  },
-  {
-    path: "/best-songs",
-    name: "BestSongs",
-    component: () =>
-      import(/* webpackChunkName: "best-singles" */ "../views/BestSongs.vue"),
-  },
-];
+const routes: Array<RouteRecordRaw> = ROUTES.map((route) => {
+  if ("routes" in route) {
+    return (route as RouteGroup).routes;
+  }
+
+  return route as RouteRecordRaw;
+}).flat();
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
