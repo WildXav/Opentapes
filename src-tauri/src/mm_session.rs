@@ -42,9 +42,10 @@ impl MMSession {
     }
 
     fn extract_cookie(headers: &HeaderMap) -> Option<String> {
-        headers.get("set-cookie")
-            .and_then(|value| value.to_str().ok())
-            .map(String::from)
+        headers.get_all("set-cookie").iter()
+            .flat_map(|value| value.to_str().ok())
+            .map(|value| String::from(value))
+            .reduce(|first, second| format!("{};{}", first, second))
     }
 
     fn extract_verifier(body: &str) -> Option<String> {
