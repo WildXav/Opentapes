@@ -18,7 +18,9 @@
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button v-if="!!error" @click="retry" type="danger">Retry</el-button>
+        <el-button v-if="!!error" @click="retry" type="primary">
+          Retry
+        </el-button>
       </span>
     </template>
   </el-dialog>
