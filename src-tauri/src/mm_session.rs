@@ -59,9 +59,7 @@ impl MMSession {
 
 #[cfg(test)]
 mod tests {
-    use regex::Regex;
     use crate::mm_session::MMSession;
-    use crate::error::Error;
 
     // TODO: Write proper tests
     #[test]
