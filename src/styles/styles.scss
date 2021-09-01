@@ -11,6 +11,7 @@ body {
   flex-direction: column;
   overflow: hidden;
   margin: 0;
+  user-select: none;
 }
 
 #app {
