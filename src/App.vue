@@ -91,5 +91,9 @@ export default class App extends Vue {
 <style lang="scss" scoped>
 .wrapper {
   height: 100%;
+
+  > .el-container {
+    overflow: hidden;
+  }
 }
 </style>
