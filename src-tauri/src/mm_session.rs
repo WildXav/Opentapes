@@ -2,18 +2,18 @@ use serde::{Deserialize, Serialize};
 use crate::error::{Error, ErrorReason};
 use reqwest::header::HeaderMap;
 use regex::Regex;
-
-const MY_MIXTAPEZ_URL: &str = "https://mymixtapez.com";
+use crate::mm_endpoints::mm_url;
+use crate::mm_endpoints::MMEndpoint::Root;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub(crate) struct MMSession {
-    cookie: String,
-    verifier: String,
+    pub cookie: String,
+    pub verifier: String,
 }
 
 impl MMSession {
     pub async fn request() -> Result<MMSession, Error> {
-        let resp = reqwest::get(MY_MIXTAPEZ_URL).await
+        let resp = reqwest::get(mm_url(Root)).await
             .map_err(|e| Error::new(
                 ErrorReason::SessionFetchingFailed, e.to_string()
             ))?;

@@ -36,13 +36,17 @@ impl Error {
 
 #[derive(Debug, Serialize)]
 pub(crate) enum ErrorReason {
+    HTTPFailure,
     SessionFetchingFailed,
+    UnexpectedResponse,
 }
 
 impl ErrorReason {
     pub fn as_str(&self) -> &'static str {
         match *self {
+            ErrorReason::HTTPFailure => "HTTP failure",
             ErrorReason::SessionFetchingFailed => "Session fetching failed",
+            ErrorReason::UnexpectedResponse => "Unexpected response",
         }
     }
 }

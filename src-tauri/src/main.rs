@@ -5,13 +5,15 @@ windows_subsystem = "windows"
 
 mod commands;
 mod error;
+mod mm_endpoints;
 mod mm_session;
 
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
+            commands::show_window,
             commands::request_new_session,
-            commands::show_window
+            commands::fetch_featured,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
