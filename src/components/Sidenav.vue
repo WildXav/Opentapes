@@ -13,9 +13,13 @@
           <span>{{ item.name }}</span>
         </template>
 
-        <template v-for="child in item.routes" :key="child.name">
-          <el-menu-item :index="child.path">{{ child.name }}</el-menu-item>
-        </template>
+        <el-menu-item
+          v-for="child in item.routes"
+          :key="child.name"
+          :index="child.path"
+        >
+          {{ child.name }}
+        </el-menu-item>
       </el-submenu>
 
       <el-menu-item v-else :index="item.alias || item.path">
@@ -53,6 +57,8 @@ export default class Sidenav extends Vue {
 
 <style lang="scss">
 #navMenu {
+  overflow-y: auto;
+
   &.el-menu--collapse {
     width: 54px;
     min-width: 54px;
