@@ -3,7 +3,7 @@ use crate::mm_session::MMSession;
 use crate::error::{Error};
 use serde_json::Value;
 use crate::mm_endpoints::{mm_url, fetch};
-use crate::mm_endpoints::MMEndpoint::{Features, Latest};
+use crate::mm_endpoints::MMEndpoint::{Features, Latest, TrendingMixtapes};
 
 //noinspection RsWrongGenericArgumentsNumber
 #[command]
@@ -28,5 +28,11 @@ pub(crate) async fn fetch_featured(session: MMSession) -> Result<Value, Error> {
 #[command]
 pub(crate) async fn fetch_latest(session: MMSession) -> Result<Value, Error> {
     let req = reqwest::Client::new().get(mm_url(Latest));
+    fetch(req, session).await
+}
+
+#[command]
+pub(crate) async fn fetch_trending_tapes(session: MMSession) -> Result<Value, Error> {
+    let req = reqwest::Client::new().get(mm_url(TrendingMixtapes));
     fetch(req, session).await
 }
