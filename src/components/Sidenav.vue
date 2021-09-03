@@ -66,7 +66,14 @@ export default class Sidenav extends Vue {
 
     > .el-menu-item,
     > .el-submenu {
+      height: 60px;
       text-align: center;
+
+      > div {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+      }
     }
   }
 
