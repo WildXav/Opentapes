@@ -10,7 +10,20 @@ export abstract class MixtapeService {
     })
       .then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)))
       .catch((e) => {
-        console.log(e);
+        // TODO: Show error in dialog
+        console.error(e);
+        throw e;
+      });
+  }
+
+  static fetchLatest(session: MMSession): Promise<Array<Mixtape>> {
+    return invoke<Array<Record<string, unknown>>>(Commands.FetchLatest, {
+      session,
+    })
+      .then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)))
+      .catch((e) => {
+        // TODO: Show error in dialog
+        console.error(e);
         throw e;
       });
   }

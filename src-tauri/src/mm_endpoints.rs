@@ -1,3 +1,9 @@
+use reqwest::RequestBuilder;
+use serde_json::Value;
+use crate::error::{Error, ErrorReason};
+use reqwest::header::COOKIE;
+use crate::mm_session::MMSession;
+
 const BASE_URL: &str = "https://mymixtapez.com";
 
 #[allow(dead_code)]
@@ -21,4 +27,16 @@ pub(crate) fn mm_url(endpoint: MMEndpoint) -> String {
         MMEndpoint::TrendingSongs => format!("{}/api/songs/trending", BASE_URL),
         MMEndpoint::GreatestSongs => format!("{}/api/songs/best", BASE_URL),
     }
+}
+
+pub(crate) async fn fetch(req_builder: RequestBuilder, session: MMSession) -> Result<Value, Error> {
+    req_builder
+        .header(COOKIE, session.cookie)
+        .header("x-mm-verifier", session.verifier)
+        .send()
+        .await
+        .map_err(|e| Error::new(ErrorReason::HTTPFailure, e.to_string()))?
+        .json()
+        .await
+        .map_err(|e| Error::new(ErrorReason::UnexpectedResponse, e.to_string()))
 }

@@ -4,7 +4,9 @@ import store from "@/store";
 
 export default abstract class View extends Vue {
   mounted(): void {
-    store.dispatch.setPrimaryViewTitle(this.$route.name as string);
+    if (store.getters.primaryViewTitle !== this.$route.name) {
+      store.dispatch.setPrimaryViewTitle(this.$route.name as string);
+    }
   }
 }
 </script>

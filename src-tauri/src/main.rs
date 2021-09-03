@@ -14,6 +14,7 @@ fn main() {
             commands::show_window,
             commands::request_new_session,
             commands::fetch_featured,
+            commands::fetch_latest,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

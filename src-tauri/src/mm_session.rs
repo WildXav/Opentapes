@@ -44,7 +44,7 @@ impl MMSession {
     fn extract_cookie(headers: &HeaderMap) -> Option<String> {
         headers.get_all("set-cookie").iter()
             .flat_map(|value| value.to_str().ok())
-            .map(|value| String::from(value))
+            .map(String::from)
             .reduce(|first, second| format!("{};{}", first, second))
     }
 

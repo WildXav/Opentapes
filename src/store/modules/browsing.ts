@@ -1,25 +1,31 @@
 import { defineModule } from "direct-vuex";
 import { Mixtape } from "@/models/mixtape";
 import { ActionContext } from "vuex";
-import { rootActionContext } from "@/store";
 import { MixtapeService } from "@/services/mixtape-service";
+import { MMSession } from "@/models/backend/mm-session";
 
 interface BrowsingState {
   featured: Array<Mixtape>;
+  latest: Array<Mixtape>;
 }
 
 const initialState: BrowsingState = {
   featured: [],
+  latest: [],
 };
 
 const getters = {
   featured: (state: BrowsingState): Array<Mixtape> => {
     return state.featured;
   },
+  latest: (state: BrowsingState): Array<Mixtape> => {
+    return state.latest;
+  },
 };
 
 enum Mutations {
   FETCH_FEATURED = "FETCH_FEATURED",
+  FETCH_LATEST = "FETCH_LATEST",
 }
 
 const mutations = {
@@ -29,22 +35,27 @@ const mutations = {
   ) => {
     state.featured = featured;
   },
+
+  [Mutations.FETCH_LATEST]: (state: BrowsingState, latest: Array<Mixtape>) => {
+    state.latest = latest;
+  },
 };
 
 const actions = {
   async fetchFeatured(
-    context: ActionContext<BrowsingState, unknown>
+    context: ActionContext<BrowsingState, unknown>,
+    session: MMSession
   ): Promise<void> {
-    const { rootState } = rootActionContext(context);
-    const session = rootState.core.session;
-    // TODO: better error handling
-    if (!session) {
-      console.log("not ready");
-      return;
-    }
-
     const featured = await MixtapeService.fetchFeatured(session);
     context.commit(Mutations.FETCH_FEATURED, featured);
+  },
+
+  async fetchLatest(
+    context: ActionContext<BrowsingState, unknown>,
+    session: MMSession
+  ): Promise<void> {
+    const latest = await MixtapeService.fetchLatest(session);
+    context.commit(Mutations.FETCH_LATEST, latest);
   },
 };
 
