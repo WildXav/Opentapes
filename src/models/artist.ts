@@ -4,6 +4,6 @@ export interface Artist {
 }
 
 export interface Artists {
-  main: Array<Artists>;
-  feature: Array<Artists>;
+  main: Array<Artist>;
+  feature: Array<Artist>;
 }

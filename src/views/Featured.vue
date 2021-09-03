@@ -1,16 +1,10 @@
 <template>
-  <div class="cards-container">
-    <el-card
+  <div class="cards-list">
+    <MixtapeCard
       v-for="tape in featured"
       :key="tape.id"
-      :body-style="{ padding: '0px' }"
-      class="box-card"
-    >
-      <img :src="tape.images[0].small" class="cover" alt="Mixtape's cover" />
-      <div style="padding: 14px">
-        <span class="select">{{ tape.name }}</span>
-      </div>
-    </el-card>
+      :tape="tape"
+    ></MixtapeCard>
   </div>
 </template>
 
@@ -20,6 +14,7 @@ import store from "@/store";
 import { Options } from "vue-class-component";
 import { MMSession } from "@/models/backend/mm-session";
 import { Mixtape } from "@/models/mixtape";
+import MixtapeCard from "@/components/MixtapeCard.vue";
 
 @Options({
   computed: {
@@ -33,23 +28,17 @@ import { Mixtape } from "@/models/mixtape";
       }
     },
   },
+  components: {
+    MixtapeCard,
+  },
 })
 export default class Featured extends View {}
 </script>
 
 <style lang="scss" scoped>
-.cards-container {
+.cards-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-}
-
-.el-card {
-  flex: 0 1 48%;
-  margin-bottom: 10px;
-
-  .cover {
-    width: 100%;
-  }
 }
 </style>
