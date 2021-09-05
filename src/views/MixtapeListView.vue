@@ -1,11 +1,13 @@
 <template>
-  <div class="cards-list">
-    <MixtapeCard
-      v-for="tape in mixtapes"
-      :key="tape.id"
-      :tape="tape"
-    ></MixtapeCard>
-  </div>
+  <el-scrollbar>
+    <div class="cards-list">
+      <MixtapeCard
+        v-for="tape in mixtapes"
+        :key="tape.id"
+        :tape="tape"
+      ></MixtapeCard>
+    </div>
+  </el-scrollbar>
 </template>
 
 <script lang="ts">
