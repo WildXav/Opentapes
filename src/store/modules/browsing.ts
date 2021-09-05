@@ -1,3 +1,4 @@
+import store from "@/store";
 import { defineModule } from "direct-vuex";
 import { Mixtape } from "@/models/mixtape";
 import { ActionContext } from "vuex";
@@ -72,7 +73,9 @@ const actions = {
     context: ActionContext<BrowsingState, unknown>,
     session: MMSession
   ): Promise<void> {
-    const featured = await MixtapeService.fetchFeatured(session);
+    const featured = await MixtapeService.fetchFeatured(session, () =>
+      store.dispatch.fetchFeatured(session)
+    );
     context.commit(Mutations.FETCH_FEATURED, featured);
   },
 
@@ -80,7 +83,9 @@ const actions = {
     context: ActionContext<BrowsingState, unknown>,
     session: MMSession
   ): Promise<void> {
-    const latest = await MixtapeService.fetchLatest(session);
+    const latest = await MixtapeService.fetchLatest(session, () =>
+      store.dispatch.fetchLatest(session)
+    );
     context.commit(Mutations.FETCH_LATEST, latest);
   },
 
@@ -88,16 +93,20 @@ const actions = {
     context: ActionContext<BrowsingState, unknown>,
     session: MMSession
   ): Promise<void> {
-    const latest = await MixtapeService.fetchTrendingTapes(session);
-    context.commit(Mutations.FETCH_TRENDING_TAPES, latest);
+    const trending = await MixtapeService.fetchTrendingTapes(session, () =>
+      store.dispatch.fetchTrendingTapes(session)
+    );
+    context.commit(Mutations.FETCH_TRENDING_TAPES, trending);
   },
 
   async fetchGreatestTapes(
     context: ActionContext<BrowsingState, unknown>,
     session: MMSession
   ): Promise<void> {
-    const latest = await MixtapeService.fetchGreatestTapes(session);
-    context.commit(Mutations.FETCH_GREATEST_TAPES, latest);
+    const greatest = await MixtapeService.fetchGreatestTapes(session, () =>
+      store.dispatch.fetchGreatestTapes(session)
+    );
+    context.commit(Mutations.FETCH_GREATEST_TAPES, greatest);
   },
 };
 

@@ -2,6 +2,7 @@ import { ActionContext } from "vuex";
 import { defineModule } from "direct-vuex";
 import { Breakpoints } from "@/models/breakpoints";
 import { MMSession } from "@/models/backend/mm-session";
+import { ErrorDialogData } from "@/models/error-dialog-data";
 
 interface CoreState {
   breakpoints: Breakpoints;
@@ -10,6 +11,7 @@ interface CoreState {
   primaryViewTitle: string | null;
   secondaryViewTitle: string | null;
   showSecondaryView: boolean;
+  errorDialogData: ErrorDialogData | null;
 }
 
 const initialState: CoreState = {
@@ -19,6 +21,7 @@ const initialState: CoreState = {
   primaryViewTitle: null,
   secondaryViewTitle: null,
   showSecondaryView: false,
+  errorDialogData: null,
 };
 
 const getters = {
@@ -40,6 +43,9 @@ const getters = {
   showSecondaryView: (state: CoreState): boolean => {
     return state.showSecondaryView;
   },
+  errorDialogData: (state: CoreState): ErrorDialogData | null => {
+    return state.errorDialogData;
+  },
 };
 
 enum Mutations {
@@ -49,6 +55,7 @@ enum Mutations {
   SET_PRIMARY_VIEW_TITLE = "SET_PRIMARY_VIEW_TITLE",
   SET_SECONDARY_VIEW_TITLE = "SET_SECONDARY_VIEW_TITLE",
   SET_SHOW_SECONDARY_VIEW = "SET_SHOW_SECONDARY_VIEW",
+  SET_ERROR_DIALOG_DATA = "SET_ERROR_DIALOG_DATA",
 }
 
 const mutations = {
@@ -77,6 +84,12 @@ const mutations = {
   ) => {
     state.showSecondaryView = showView;
   },
+  [Mutations.SET_ERROR_DIALOG_DATA]: (
+    state: CoreState,
+    errorDialogData: ErrorDialogData | null
+  ) => {
+    state.errorDialogData = errorDialogData;
+  },
 };
 
 const actions = {
@@ -89,26 +102,38 @@ const actions = {
   ): void {
     context.commit(Mutations.SET_SESSION, payload);
   },
-  loadSession(context: ActionContext<unknown, unknown>): void {
-    context.commit(Mutations.SET_IS_LOADING_SESSION, true);
+  setIsLoadingSession(
+    context: ActionContext<unknown, unknown>,
+    payload: boolean
+  ): void {
+    context.commit(Mutations.SET_IS_LOADING_SESSION, payload);
   },
   setPrimaryViewTitle(
     context: ActionContext<unknown, unknown>,
-    title: string
+    payload: string
   ): void {
-    context.commit(Mutations.SET_PRIMARY_VIEW_TITLE, title);
+    context.commit(Mutations.SET_PRIMARY_VIEW_TITLE, payload);
   },
   setSecondaryViewTitle(
     context: ActionContext<unknown, unknown>,
-    title: string
+    payload: string
   ): void {
-    context.commit(Mutations.SET_SECONDARY_VIEW_TITLE, title);
+    context.commit(Mutations.SET_SECONDARY_VIEW_TITLE, payload);
   },
   toggleSecondaryView(
     context: ActionContext<unknown, unknown>,
-    showView: boolean
+    payload: boolean
   ): void {
-    context.commit(Mutations.SET_SHOW_SECONDARY_VIEW, showView);
+    context.commit(Mutations.SET_SHOW_SECONDARY_VIEW, payload);
+  },
+  setErrorDialogData(
+    context: ActionContext<unknown, unknown>,
+    payload: ErrorDialogData | null
+  ): void {
+    if (payload) {
+      console.error(payload.error.reason, payload.error.details);
+    }
+    context.commit(Mutations.SET_ERROR_DIALOG_DATA, payload);
   },
 };
 

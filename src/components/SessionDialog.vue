@@ -7,35 +7,22 @@
     :close-on-press-escape="false"
     :close-on-click-modal="false"
   >
-    <div v-if="!error" class="wrapper">
-      <font-awesome-icon icon="spinner" size="3x" spin />
-    </div>
-
-    <div v-if="!!error" class="wrapper error">
-      <font-awesome-icon icon="times" size="3x" />
-      <h3>{{ error.reason }}</h3>
-    </div>
+    <div v-loading="true" class="loader"></div>
 
     <template #footer>
-      <span class="dialog-footer">
-        <el-button v-if="!!error" @click="retry" type="primary">
-          Retry
-        </el-button>
-      </span>
+      <span class="dialog-footer"></span>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts">
+import store from "@/store";
 import { Options, Vue } from "vue-class-component";
-import { invoke } from "@tauri-apps/api";
-import { Commands } from "@/models/backend/commands";
+import { Command } from "@/models/backend/command";
 import { MMSession } from "@/models/backend/mm-session";
 import { Error } from "@/models/backend/error";
-
-enum Events {
-  SessionLoaded = "sessionLoaded",
-}
+import { ErrorDialogData } from "@/models/error-dialog-data";
+import { invoke } from "@tauri-apps/api";
 
 @Options({
   props: {
@@ -43,52 +30,35 @@ enum Events {
   },
   watch: {
     sessionLoading(isLoading: boolean) {
-      if (isLoading) this.requestNewSession();
+      if (isLoading) {
+        this.isDialogVisible = true;
+        this.requestNewSession();
+      } else this.isDialogVisible = false;
     },
   },
-  emits: [Events.SessionLoaded],
 })
 export default class SessionDialog extends Vue {
   isDialogVisible = false;
-  error: Error | null = null;
 
   requestNewSession(): void {
-    this.isDialogVisible = true;
-    const loadingStart = performance.now();
-
-    invoke<MMSession>(Commands.RequestNewSession)
-      .then((session) => {
-        const loadingDuration = performance.now() - loadingStart;
-
-        setTimeout(() => {
-          this.isDialogVisible = false;
-          this.error = null;
-          this.$emit(Events.SessionLoaded, session);
-        }, Math.max(1000 - loadingDuration, 0));
+    invoke<MMSession>(Command.RequestNewSession)
+      .then((session) => store.dispatch.setSession(session))
+      .catch((error: Error) => {
+        store.dispatch.setErrorDialogData(
+          new ErrorDialogData(error, false, () =>
+            store.dispatch.setIsLoadingSession(true)
+          )
+        );
       })
-      .catch((err: Error) => {
-        this.error = err;
-        console.error(err.reason, err.details);
+      .finally(() => {
+        store.dispatch.setIsLoadingSession(false);
       });
-  }
-
-  retry(): void {
-    this.error = null;
-    this.requestNewSession();
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.wrapper {
-  text-align: center;
-
-  &.error {
-    color: var(--el-color-danger);
-  }
-
-  h3 {
-    margin-bottom: 0;
-  }
+.loader {
+  margin: auto;
 }
 </style>

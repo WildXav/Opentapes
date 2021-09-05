@@ -30,13 +30,20 @@ pub(crate) fn mm_url(endpoint: MMEndpoint) -> String {
 }
 
 pub(crate) async fn fetch(req_builder: RequestBuilder, session: MMSession) -> Result<Value, Error> {
-    req_builder
+    let response = req_builder
         .header(COOKIE, session.cookie)
         .header("x-mm-verifier", session.verifier)
         .send()
         .await
-        .map_err(|e| Error::new(ErrorReason::HTTPFailure, e.to_string()))?
-        .json()
+        .map_err(|e| Error::new(ErrorReason::HTTPFailure, e.to_string()))?;
+
+    if !response.status().is_success() {
+        return Err(Error::new(
+            ErrorReason::HTTPFailure,
+            response.status().to_string()))
+    }
+
+    response.json()
         .await
         .map_err(|e| Error::new(ErrorReason::UnexpectedResponse, e.to_string()))
 }

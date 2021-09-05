@@ -25,10 +25,8 @@
     <el-footer></el-footer>
   </el-container>
 
-  <SessionDialog
-    :session-loading="isLoadingSession()"
-    @session-loaded="onSessionLoaded($event)"
-  ></SessionDialog>
+  <SessionDialog :session-loading="isLoadingSession()"></SessionDialog>
+  <ErrorDialog :dialogData="getErrorDialogData()"></ErrorDialog>
 </template>
 
 <script lang="ts">
@@ -38,11 +36,13 @@ import store from "@/store";
 import Header from "@/components/Header.vue";
 import Sidenav from "@/components/Sidenav.vue";
 import SessionDialog from "@/components/SessionDialog.vue";
-import { MMSession } from "@/models/backend/mm-session";
-import { Commands } from "@/models/backend/commands";
+import { Command } from "@/models/backend/command";
+import ErrorDialog from "@/components/ErrorDialog.vue";
+import { ErrorDialogData } from "@/models/error-dialog-data";
 
 @Options({
   components: {
+    ErrorDialog,
     Header,
     SessionDialog,
     Sidenav,
@@ -52,10 +52,10 @@ export default class App extends Vue {
   isDrawerVisible = false;
 
   mounted(): void {
-    invoke(Commands.ShowWindow);
+    invoke(Command.ShowWindow);
     window.addEventListener("resize", this.onResize);
     this.onResize();
-    store.dispatch.loadSession();
+    store.dispatch.setIsLoadingSession(true);
   }
 
   isLoadingSession(): boolean {
@@ -74,12 +74,12 @@ export default class App extends Vue {
     return store.getters.showSecondaryView;
   }
 
-  toggleSecondaryView(showView: boolean): void {
-    store.dispatch.toggleSecondaryView(showView);
+  getErrorDialogData(): ErrorDialogData | null {
+    return store.getters.errorDialogData;
   }
 
-  onSessionLoaded(result: MMSession): void {
-    store.dispatch.setSession(result);
+  toggleSecondaryView(showView: boolean): void {
+    store.dispatch.toggleSecondaryView(showView);
   }
 
   onResize(): void {

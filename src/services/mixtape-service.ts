@@ -1,54 +1,49 @@
 import { Mixtape } from "@/models/mixtape";
 import { MMSession } from "@/models/backend/mm-session";
-import { invoke } from "@tauri-apps/api";
-import { Commands } from "@/models/backend/commands";
+import { Command, execCmd } from "@/models/backend/command";
 
 export abstract class MixtapeService {
-  static fetchFeatured(session: MMSession): Promise<Array<Mixtape>> {
-    return invoke<Array<Record<string, unknown>>>(Commands.FetchFeatured, {
-      session,
-    })
-      .then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)))
-      .catch((e) => {
-        // TODO: Show error in dialog
-        console.error(e);
-        throw e;
-      });
+  static fetchFeatured(
+    session: MMSession,
+    retryCb?: () => unknown
+  ): Promise<Array<Mixtape>> {
+    return execCmd<Array<Record<string, unknown>>>(
+      Command.FetchFeatured,
+      { session },
+      retryCb
+    ).then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)));
   }
 
-  static fetchLatest(session: MMSession): Promise<Array<Mixtape>> {
-    return invoke<Array<Record<string, unknown>>>(Commands.FetchLatest, {
-      session,
-    })
-      .then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)))
-      .catch((e) => {
-        // TODO: Show error in dialog
-        console.error(e);
-        throw e;
-      });
+  static fetchLatest(
+    session: MMSession,
+    retryCb?: () => unknown
+  ): Promise<Array<Mixtape>> {
+    return execCmd<Array<Record<string, unknown>>>(
+      Command.FetchLatest,
+      { session },
+      retryCb
+    ).then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)));
   }
 
-  static fetchTrendingTapes(session: MMSession): Promise<Array<Mixtape>> {
-    return invoke<Array<Record<string, unknown>>>(Commands.FetchTrendingTapes, {
-      session,
-    })
-      .then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)))
-      .catch((e) => {
-        // TODO: Show error in dialog
-        console.error(e);
-        throw e;
-      });
+  static fetchTrendingTapes(
+    session: MMSession,
+    retryCb?: () => unknown
+  ): Promise<Array<Mixtape>> {
+    return execCmd<Array<Record<string, unknown>>>(
+      Command.FetchTrendingTapes,
+      { session },
+      retryCb
+    ).then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)));
   }
 
-  static fetchGreatestTapes(session: MMSession): Promise<Array<Mixtape>> {
-    return invoke<Array<Record<string, unknown>>>(Commands.FetchGreatestTapes, {
-      session,
-    })
-      .then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)))
-      .catch((e) => {
-        // TODO: Show error in dialog
-        console.error(e);
-        throw e;
-      });
+  static fetchGreatestTapes(
+    session: MMSession,
+    retryCb?: () => unknown
+  ): Promise<Array<Mixtape>> {
+    return execCmd<Array<Record<string, unknown>>>(
+      Command.FetchGreatestTapes,
+      { session },
+      retryCb
+    ).then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)));
   }
 }
