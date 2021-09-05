@@ -8,12 +8,14 @@ interface BrowsingState {
   featured: Array<Mixtape>;
   latest: Array<Mixtape>;
   trendingTapes: Array<Mixtape>;
+  greatestTapes: Array<Mixtape>;
 }
 
 const initialState: BrowsingState = {
   featured: [],
   latest: [],
   trendingTapes: [],
+  greatestTapes: [],
 };
 
 const getters = {
@@ -26,12 +28,16 @@ const getters = {
   trendingTapes: (state: BrowsingState): Array<Mixtape> => {
     return state.trendingTapes;
   },
+  greatestTapes: (state: BrowsingState): Array<Mixtape> => {
+    return state.greatestTapes;
+  },
 };
 
 enum Mutations {
   FETCH_FEATURED = "FETCH_FEATURED",
   FETCH_LATEST = "FETCH_LATEST",
   FETCH_TRENDING_TAPES = "FETCH_TRENDING_TAPES",
+  FETCH_GREATEST_TAPES = "FETCH_GREATEST_TAPES",
 }
 
 const mutations = {
@@ -51,6 +57,13 @@ const mutations = {
     trendingTapes: Array<Mixtape>
   ) => {
     state.trendingTapes = trendingTapes;
+  },
+
+  [Mutations.FETCH_GREATEST_TAPES]: (
+    state: BrowsingState,
+    greatestTapes: Array<Mixtape>
+  ) => {
+    state.greatestTapes = greatestTapes;
   },
 };
 
@@ -77,6 +90,14 @@ const actions = {
   ): Promise<void> {
     const latest = await MixtapeService.fetchTrendingTapes(session);
     context.commit(Mutations.FETCH_TRENDING_TAPES, latest);
+  },
+
+  async fetchGreatestTapes(
+    context: ActionContext<BrowsingState, unknown>,
+    session: MMSession
+  ): Promise<void> {
+    const latest = await MixtapeService.fetchGreatestTapes(session);
+    context.commit(Mutations.FETCH_GREATEST_TAPES, latest);
   },
 };
 

@@ -39,4 +39,16 @@ export abstract class MixtapeService {
         throw e;
       });
   }
+
+  static fetchGreatestTapes(session: MMSession): Promise<Array<Mixtape>> {
+    return invoke<Array<Record<string, unknown>>>(Commands.FetchGreatestTapes, {
+      session,
+    })
+      .then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)))
+      .catch((e) => {
+        // TODO: Show error in dialog
+        console.error(e);
+        throw e;
+      });
+  }
 }
