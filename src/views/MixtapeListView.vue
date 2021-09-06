@@ -10,7 +10,8 @@
         v-for="tape in mixtapes"
         :key="tape.id"
         :tape="tape"
-      ></MixtapeCard>
+        @click="selectTape(tape)"
+      />
     </div>
 
     <div v-if="loading" v-loading="true" class="loader"></div>
@@ -18,6 +19,7 @@
 </template>
 
 <script lang="ts">
+import store from "@/store";
 import { Mixtape } from "@/models/mixtape";
 import View from "@/views/View.vue";
 import { MMSession } from "@/models/backend/mm-session";
@@ -42,6 +44,10 @@ export default abstract class MixtapeListView extends View {
       this.fetchFn(this.session).then(() => (this.loading = false));
     }
   }
+
+  selectTape(tape: Mixtape): void {
+    store.dispatch.selectTape(tape);
+  }
 }
 </script>
 
@@ -50,6 +56,7 @@ export default abstract class MixtapeListView extends View {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  padding: 5px;
 }
 
 .loader {

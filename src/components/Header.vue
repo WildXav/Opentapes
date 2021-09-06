@@ -1,25 +1,23 @@
 <template>
   <div id="header">
-    <div class="title">
-      <el-link
-        href="#"
-        :underline="false"
-        :type="showSecondaryView ? 'info' : 'default'"
+    <div class="breadcrumb">
+      <div
+        class="page-title"
+        :class="{ active: !showSecondaryView }"
         @click="toggleSecondaryView(false)"
       >
         {{ primaryViewTitle }}
-      </el-link>
+      </div>
 
       <template v-if="!!secondaryViewTitle">
         <font-awesome-icon icon="chevron-right" size="xs"></font-awesome-icon>
-        <el-link
-          href="#"
-          :underline="false"
-          :type="showSecondaryView ? 'default' : 'info'"
+        <div
+          class="page-title"
+          :class="{ active: showSecondaryView }"
           @click="toggleSecondaryView(true)"
         >
           {{ secondaryViewTitle }}
-        </el-link>
+        </div>
       </template>
     </div>
   </div>
@@ -27,11 +25,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-
-enum Events {
-  ShowDrawer = "showDrawer",
-  ToggleSecondaryView = "ToggleSecondaryView",
-}
+import store from "@/store";
 
 @Options({
   props: {
@@ -39,21 +33,15 @@ enum Events {
     secondaryViewTitle: String,
     showSecondaryView: Boolean,
   },
-  emits: [Events.ShowDrawer, Events.ToggleSecondaryView],
 })
 export default class Header extends Vue {
   showSecondaryView!: boolean;
-
-  showDrawer(): void {
-    document.getElementById("navBtn")?.blur();
-    this.$emit(Events.ShowDrawer);
-  }
 
   toggleSecondaryView(value: boolean): void {
     if (this.showSecondaryView === value) {
       return;
     }
-    this.$emit(Events.ToggleSecondaryView, value);
+    store.dispatch.toggleSecondaryView(value);
   }
 }
 </script>
@@ -65,7 +53,7 @@ export default class Header extends Vue {
   height: 100%;
 }
 
-.title {
+.breadcrumb {
   display: flex;
   align-items: center;
   padding-top: 1px;
@@ -73,33 +61,28 @@ export default class Header extends Vue {
   font-size: 18px;
   overflow: hidden;
 
-  .el-link {
-    display: block;
+  .page-title {
     padding-top: 3px;
     font-size: inherit;
+    font-weight: bold;
     white-space: nowrap;
     overflow: inherit;
     text-overflow: ellipsis;
+    cursor: pointer;
+    color: var(--el-color-info);
 
     &:first-child {
       overflow: visible;
     }
 
-    &.el-link--default {
-      font-weight: bold;
-
-      &:hover {
-        color: var(--el-link-default-font-color);
-        cursor: default;
-      }
+    &:hover {
+      color: var(--el-color-primary);
     }
 
-    &.el-link--info {
-      font-weight: bold;
-
-      &:hover {
-        color: var(--el-color-primary);
-      }
+    &.active,
+    &.active:hover {
+      color: var(--el-text-color-regular);
+      cursor: default;
     }
   }
 

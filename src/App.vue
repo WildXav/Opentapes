@@ -3,7 +3,7 @@
 <template>
   <el-container class="wrapper">
     <el-container>
-      <Sidenav></Sidenav>
+      <Sidenav />
 
       <el-container>
         <el-header>
@@ -11,22 +11,25 @@
             :primary-view-title="primaryViewTitle()"
             :secondary-view-title="secondaryViewTitle()"
             :show-secondary-view="showSecondaryView()"
-            @show-drawer="isDrawerVisible = true"
-            @toggle-secondary-view="toggleSecondaryView($event)"
-          ></Header>
+          />
         </el-header>
 
         <el-main>
-          <router-view />
+          <router-view v-show="!showSecondaryView()" />
+          <MixtapeDetails
+            v-if="!!getSelectedTape()"
+            v-show="showSecondaryView()"
+            :tape="getSelectedTape()"
+          />
         </el-main>
       </el-container>
     </el-container>
 
-    <el-footer></el-footer>
+    <el-footer />
   </el-container>
 
-  <SessionDialog :session-loading="isLoadingSession()"></SessionDialog>
-  <ErrorDialog :dialogData="getErrorDialogData()"></ErrorDialog>
+  <SessionDialog :session-loading="isLoadingSession()" />
+  <ErrorDialog :dialogData="getErrorDialogData()" />
 </template>
 
 <script lang="ts">
@@ -39,18 +42,26 @@ import SessionDialog from "@/components/SessionDialog.vue";
 import { Command } from "@/models/backend/command";
 import ErrorDialog from "@/components/ErrorDialog.vue";
 import { ErrorDialogData } from "@/models/error-dialog-data";
+import MixtapeDetails from "@/components/MixtapeDetails.vue";
+import { Mixtape } from "@/models/mixtape";
 
 @Options({
   components: {
     ErrorDialog,
     Header,
+    MixtapeDetails,
     SessionDialog,
     Sidenav,
   },
+  watch: {
+    $route() {
+      if (store.getters.showSecondaryView) {
+        store.dispatch.toggleSecondaryView(false);
+      }
+    },
+  },
 })
 export default class App extends Vue {
-  isDrawerVisible = false;
-
   mounted(): void {
     invoke(Command.ShowWindow);
     window.addEventListener("resize", this.onResize);
@@ -78,8 +89,8 @@ export default class App extends Vue {
     return store.getters.errorDialogData;
   }
 
-  toggleSecondaryView(showView: boolean): void {
-    store.dispatch.toggleSecondaryView(showView);
+  getSelectedTape(): Mixtape | null {
+    return store.getters.selectedTape;
   }
 
   onResize(): void {

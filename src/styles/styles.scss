@@ -30,8 +30,12 @@ body {
 }
 
 // TODO: those padding are only for mobile display
-.el-header, .el-main, .el-footer {
+.el-header, .el-footer {
   padding: 10px;
+}
+
+.el-main {
+  padding: 0;
 }
 
 .el-header {
