@@ -21,10 +21,7 @@ import MixtapeListView from "@/views/MixtapeListView.vue";
   },
 })
 export default class Latest extends MixtapeListView {
-  fetchMixtapes(): void {
-    if (this.session) {
-      store.dispatch.fetchLatest(this.session);
-    }
-  }
+  useInfiniteScroll = true;
+  fetchFn = store.dispatch.fetchLatest;
 }
 </script>

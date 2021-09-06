@@ -26,19 +26,25 @@ pub(crate) async fn fetch_featured(session: MMSession) -> Result<Value, Error> {
 }
 
 #[command]
-pub(crate) async fn fetch_latest(session: MMSession) -> Result<Value, Error> {
-    let req = reqwest::Client::new().get(mm_url(Latest));
+pub(crate) async fn fetch_latest(session: MMSession, page: u32, size: u32) -> Result<Value, Error> {
+    let req = reqwest::Client::new()
+        .get(mm_url(Latest))
+        .query(&[("page", page), ("size", size)]);
     fetch(req, session).await
 }
 
 #[command]
-pub(crate) async fn fetch_trending_tapes(session: MMSession) -> Result<Value, Error> {
-    let req = reqwest::Client::new().get(mm_url(TrendingMixtapes));
+pub(crate) async fn fetch_trending_tapes(session: MMSession, page: u32, size: u32) -> Result<Value, Error> {
+    let req = reqwest::Client::new()
+        .get(mm_url(TrendingMixtapes))
+        .query(&[("page", page), ("size", size)]);
     fetch(req, session).await
 }
 
 #[command]
-pub(crate) async fn fetch_greatest_tapes(session: MMSession) -> Result<Value, Error> {
-    let req = reqwest::Client::new().get(mm_url(GreatestMixtapes));
+pub(crate) async fn fetch_greatest_tapes(session: MMSession, page: u32, size: u32) -> Result<Value, Error> {
+    let req = reqwest::Client::new()
+        .get(mm_url(GreatestMixtapes))
+        .query(&[("page", page), ("size", size)]);
     fetch(req, session).await
 }

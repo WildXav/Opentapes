@@ -15,16 +15,16 @@ import MixtapeCard from "@/components/MixtapeCard.vue";
     session() {
       this.fetchMixtapes();
     },
+    mixtapes() {
+      this.loading = false;
+    },
   },
   components: {
     MixtapeCard,
   },
 })
 export default class TrendingTapes extends MixtapeListView {
-  fetchMixtapes(): void {
-    if (this.session) {
-      store.dispatch.fetchTrendingTapes(this.session);
-    }
-  }
+  useInfiniteScroll = true;
+  fetchFn = store.dispatch.fetchTrendingTapes;
 }
 </script>

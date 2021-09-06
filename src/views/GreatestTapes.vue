@@ -15,16 +15,16 @@ import MixtapeListView from "@/views/MixtapeListView.vue";
     session() {
       this.fetchMixtapes();
     },
+    mixtapes() {
+      this.loading = false;
+    },
   },
   components: {
     MixtapeCard,
   },
 })
-export default class Latest extends MixtapeListView {
-  fetchMixtapes(): void {
-    if (this.session) {
-      store.dispatch.fetchGreatestTapes(this.session);
-    }
-  }
+export default class GreatestTapes extends MixtapeListView {
+  useInfiniteScroll = true;
+  fetchFn = store.dispatch.fetchGreatestTapes;
 }
 </script>

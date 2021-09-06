@@ -16,33 +16,57 @@ export abstract class MixtapeService {
 
   static fetchLatest(
     session: MMSession,
+    page: number,
+    size: number,
     retryCb?: () => unknown
   ): Promise<Array<Mixtape>> {
+    const args = {
+      session,
+      page,
+      size,
+    };
+
     return execCmd<Array<Record<string, unknown>>>(
       Command.FetchLatest,
-      { session },
+      args,
       retryCb
     ).then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)));
   }
 
   static fetchTrendingTapes(
     session: MMSession,
+    page: number,
+    size: number,
     retryCb?: () => unknown
   ): Promise<Array<Mixtape>> {
+    const args = {
+      session,
+      page,
+      size,
+    };
+
     return execCmd<Array<Record<string, unknown>>>(
       Command.FetchTrendingTapes,
-      { session },
+      args,
       retryCb
     ).then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)));
   }
 
   static fetchGreatestTapes(
     session: MMSession,
+    page: number,
+    size: number,
     retryCb?: () => unknown
   ): Promise<Array<Mixtape>> {
+    const args = {
+      session,
+      page,
+      size,
+    };
+
     return execCmd<Array<Record<string, unknown>>>(
       Command.FetchGreatestTapes,
-      { session },
+      args,
       retryCb
     ).then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)));
   }

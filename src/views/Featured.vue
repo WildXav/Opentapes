@@ -15,16 +15,15 @@ import MixtapeCard from "@/components/MixtapeCard.vue";
     session() {
       this.fetchMixtapes();
     },
+    mixtapes() {
+      this.loading = false;
+    },
   },
   components: {
     MixtapeCard,
   },
 })
 export default class Featured extends MixtapeListView {
-  fetchMixtapes(): void {
-    if (this.session) {
-      store.dispatch.fetchFeatured(this.session);
-    }
-  }
+  fetchFn = store.dispatch.fetchFeatured;
 }
 </script>

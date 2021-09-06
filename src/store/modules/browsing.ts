@@ -4,19 +4,26 @@ import { Mixtape } from "@/models/mixtape";
 import { ActionContext } from "vuex";
 import { MixtapeService } from "@/services/mixtape-service";
 import { MMSession } from "@/models/backend/mm-session";
+import { CONFIG } from "@/config";
 
 interface BrowsingState {
   featured: Array<Mixtape>;
   latest: Array<Mixtape>;
+  latestPage: number;
   trendingTapes: Array<Mixtape>;
+  trendingTapesPage: number;
   greatestTapes: Array<Mixtape>;
+  greatestTapesPage: number;
 }
 
 const initialState: BrowsingState = {
   featured: [],
   latest: [],
+  latestPage: 0,
   trendingTapes: [],
+  trendingTapesPage: 0,
   greatestTapes: [],
+  greatestTapesPage: 0,
 };
 
 const getters = {
@@ -50,21 +57,24 @@ const mutations = {
   },
 
   [Mutations.FETCH_LATEST]: (state: BrowsingState, latest: Array<Mixtape>) => {
-    state.latest = latest;
+    state.latest.push(...latest);
+    state.latestPage++;
   },
 
   [Mutations.FETCH_TRENDING_TAPES]: (
     state: BrowsingState,
     trendingTapes: Array<Mixtape>
   ) => {
-    state.trendingTapes = trendingTapes;
+    state.trendingTapes.push(...trendingTapes);
+    state.trendingTapesPage++;
   },
 
   [Mutations.FETCH_GREATEST_TAPES]: (
     state: BrowsingState,
     greatestTapes: Array<Mixtape>
   ) => {
-    state.greatestTapes = greatestTapes;
+    state.greatestTapes.push(...greatestTapes);
+    state.greatestTapesPage++;
   },
 };
 
@@ -83,8 +93,11 @@ const actions = {
     context: ActionContext<BrowsingState, unknown>,
     session: MMSession
   ): Promise<void> {
-    const latest = await MixtapeService.fetchLatest(session, () =>
-      store.dispatch.fetchLatest(session)
+    const latest = await MixtapeService.fetchLatest(
+      session,
+      context.state.latestPage + 1,
+      CONFIG.fetchingSize,
+      () => store.dispatch.fetchLatest(session)
     );
     context.commit(Mutations.FETCH_LATEST, latest);
   },
@@ -93,8 +106,11 @@ const actions = {
     context: ActionContext<BrowsingState, unknown>,
     session: MMSession
   ): Promise<void> {
-    const trending = await MixtapeService.fetchTrendingTapes(session, () =>
-      store.dispatch.fetchTrendingTapes(session)
+    const trending = await MixtapeService.fetchTrendingTapes(
+      session,
+      context.state.trendingTapesPage + 1,
+      CONFIG.fetchingSize,
+      () => store.dispatch.fetchTrendingTapes(session)
     );
     context.commit(Mutations.FETCH_TRENDING_TAPES, trending);
   },
@@ -103,8 +119,11 @@ const actions = {
     context: ActionContext<BrowsingState, unknown>,
     session: MMSession
   ): Promise<void> {
-    const greatest = await MixtapeService.fetchGreatestTapes(session, () =>
-      store.dispatch.fetchGreatestTapes(session)
+    const greatest = await MixtapeService.fetchGreatestTapes(
+      session,
+      context.state.greatestTapesPage + 1,
+      CONFIG.fetchingSize,
+      () => store.dispatch.fetchGreatestTapes(session)
     );
     context.commit(Mutations.FETCH_GREATEST_TAPES, greatest);
   },
