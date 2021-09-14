@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar>
+  <div>
     <div
       class="cards-list"
       v-infinite-scroll="fetchMixtapes"
@@ -17,7 +17,7 @@
     </div>
 
     <div v-if="loading" v-loading="true" class="loader"></div>
-  </el-scrollbar>
+  </div>
 </template>
 
 <script lang="ts">
