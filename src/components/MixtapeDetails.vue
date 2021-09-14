@@ -26,7 +26,7 @@ export default class MixtapeDetails extends Vue {}
 
 <style lang="scss" scoped>
 .cover {
-  height: 100px;
+  height: 120px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -41,8 +41,11 @@ export default class MixtapeDetails extends Vue {}
   color: white;
 
   h1 {
+    margin-top: 0;
     margin-left: 5px;
     margin-bottom: 3px;
+    max-height: 45px;
+    overflow: hidden;
     font-size: 18px;
     text-shadow: 0 0 5px #000000;
   }

@@ -4,17 +4,16 @@
       <div class="title select">{{ tape.name }}</div>
       <div class="overlay"></div>
 
-      <img :src="coverUrl()" class="cover" alt="cover" />
+      <img :src="tape.smallCoverUrl" class="cover" alt="cover" />
     </div>
     <div class="artists select">
-      {{ artists() }}
+      {{ tape.mainArtists }}
     </div>
   </el-card>
 </template>
 
 <script lang="ts">
-import View from "@/views/View.vue";
-import { Options } from "vue-class-component";
+import { Options, Vue } from "vue-class-component";
 import { Mixtape } from "@/models/mixtape";
 
 @Options({
@@ -25,18 +24,7 @@ import { Mixtape } from "@/models/mixtape";
     },
   },
 })
-export default class MixtapeCard extends View {
-  tape!: Mixtape;
-
-  coverUrl(): string | null {
-    if (this.tape.images.length === 0) return null;
-    return this.tape.images.map((image) => image.small)[0];
-  }
-
-  artists(): string {
-    return this.tape.artists.main.map((artist) => artist.name).join(", ");
-  }
-}
+export default class MixtapeCard extends Vue {}
 </script>
 
 <style lang="scss" scoped>
