@@ -9,7 +9,9 @@
       <MixtapeCard
         v-for="tape in mixtapes"
         :key="tape.id"
-        :tape="tape"
+        :name="tape.name"
+        :coverUrl="tape.smallCoverUrl"
+        :artists="tape.mainArtists"
         @click="selectTape(tape)"
       />
     </div>

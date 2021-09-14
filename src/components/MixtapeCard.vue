@@ -1,25 +1,32 @@
 <template>
   <el-card :body-style="{ padding: '0px' }" class="box-card">
     <div class="cover-container">
-      <div class="title select">{{ tape.name }}</div>
+      <div class="title select">{{ name }}</div>
       <div class="overlay"></div>
 
-      <img :src="tape.smallCoverUrl" class="cover" alt="cover" />
+      <img :src="coverUrl" class="cover" alt="cover" />
     </div>
     <div class="artists select">
-      {{ tape.mainArtists }}
+      {{ artists }}
     </div>
   </el-card>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { Mixtape } from "@/models/mixtape";
 
 @Options({
   props: {
-    tape: {
-      type: Mixtape,
+    name: {
+      type: String,
+      required: true,
+    },
+    coverUrl: {
+      type: String,
+      required: true,
+    },
+    artists: {
+      type: String,
       required: true,
     },
   },
