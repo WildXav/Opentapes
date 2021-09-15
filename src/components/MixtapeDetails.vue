@@ -1,10 +1,12 @@
 <template>
-  <div
-    class="cover"
-    :style="{ 'background-image': 'url(\'' + tape.images[0].medium + '\')' }"
-  >
-    <div class="title">
-      <h1>{{ tape.name }}</h1>
+  <div class="wrapper">
+    <div
+      class="cover"
+      :style="{ 'background-image': 'url(\'' + tape.images[0].medium + '\')' }"
+    >
+      <div class="title">
+        <h1>{{ tape.name }}</h1>
+      </div>
     </div>
   </div>
 </template>
@@ -25,6 +27,15 @@ export default class MixtapeDetails extends Vue {}
 </script>
 
 <style lang="scss" scoped>
+.wrapper {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--el-background-color-base);
+}
+
 .cover {
   height: 120px;
   background-size: cover;

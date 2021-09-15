@@ -15,7 +15,7 @@
         </el-header>
 
         <el-main>
-          <router-view v-show="!showSecondaryView()" />
+          <router-view />
           <MixtapeDetails
             v-if="!!getSelectedTape()"
             v-show="showSecondaryView()"

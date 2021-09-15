@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="list-wrapper">
     <div
       class="cards-list"
       v-infinite-scroll="fetchMixtapes"
@@ -54,6 +54,11 @@ export default abstract class MixtapeListView extends View {
 </script>
 
 <style lang="scss" scoped>
+.list-wrapper {
+  height: 100%;
+  overflow-y: auto;
+}
+
 .cards-list {
   display: flex;
   flex-wrap: wrap;
