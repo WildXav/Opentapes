@@ -10,7 +10,7 @@
       </div>
 
       <template v-if="!!secondaryViewTitle">
-        <font-awesome-icon icon="chevron-right" size="xs"></font-awesome-icon>
+        <div class="separator">|</div>
         <div
           class="page-title"
           :class="{ active: showSecondaryView }"
@@ -86,8 +86,9 @@ export default class Header extends Vue {
     }
   }
 
-  .fa-chevron-right {
+  .separator {
     margin: 0 5px;
+    font-weight: bold;
   }
 }
 </style>
