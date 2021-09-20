@@ -2,7 +2,7 @@ import store from "@/store";
 import { defineModule } from "direct-vuex";
 import { Mixtape } from "@/models/mixtape";
 import { ActionContext } from "vuex";
-import { MixtapeService } from "@/services/mixtape-service";
+import { BrowsingService } from "@/services/browsing-service";
 import { MMSession } from "@/models/backend/mm-session";
 import { CONFIG } from "@/config";
 
@@ -83,7 +83,7 @@ const actions = {
     context: ActionContext<BrowsingState, unknown>,
     session: MMSession
   ): Promise<void> {
-    const featured = await MixtapeService.fetchFeatured(session, () =>
+    const featured = await BrowsingService.fetchFeatured(session, () =>
       store.dispatch.fetchFeatured(session)
     );
     context.commit(Mutations.FETCH_FEATURED, featured);
@@ -93,7 +93,7 @@ const actions = {
     context: ActionContext<BrowsingState, unknown>,
     session: MMSession
   ): Promise<void> {
-    const latest = await MixtapeService.fetchLatest(
+    const latest = await BrowsingService.fetchLatest(
       session,
       context.state.latestPage + 1,
       CONFIG.fetchingSize,
@@ -106,7 +106,7 @@ const actions = {
     context: ActionContext<BrowsingState, unknown>,
     session: MMSession
   ): Promise<void> {
-    const trending = await MixtapeService.fetchTrendingTapes(
+    const trending = await BrowsingService.fetchTrendingTapes(
       session,
       context.state.trendingTapesPage + 1,
       CONFIG.fetchingSize,
@@ -119,7 +119,7 @@ const actions = {
     context: ActionContext<BrowsingState, unknown>,
     session: MMSession
   ): Promise<void> {
-    const greatest = await MixtapeService.fetchGreatestTapes(
+    const greatest = await BrowsingService.fetchGreatestTapes(
       session,
       context.state.greatestTapesPage + 1,
       CONFIG.fetchingSize,

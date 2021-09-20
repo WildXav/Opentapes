@@ -2,7 +2,7 @@ import { Mixtape } from "@/models/mixtape";
 import { MMSession } from "@/models/backend/mm-session";
 import { Command, execCmd } from "@/models/backend/command";
 
-export abstract class MixtapeService {
+export abstract class BrowsingService {
   static fetchFeatured(
     session: MMSession,
     retryCb?: () => unknown
