@@ -8,6 +8,6 @@ export interface Artists {
   feature: Array<Artist>;
 }
 
-export const concatMainArtists = (artists: Array<Artist>): string => {
+export const concatArtists = (artists: Array<Artist>): string => {
   return artists.map((artist) => artist.name).join(", ");
 };

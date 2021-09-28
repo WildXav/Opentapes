@@ -1,5 +1,5 @@
 import { Image, ImageSize } from "@/models/image";
-import { Artists, concatMainArtists } from "@/models/artist";
+import { Artists, concatArtists } from "@/models/artist";
 import dayjs from "dayjs";
 
 export class Mixtape {
@@ -23,7 +23,7 @@ export class Mixtape {
     this.artists = json.artists as Artists;
     this.releaseDate = dayjs(json.releaseDate as string);
 
-    this.mainArtists = concatMainArtists(this.artists.main);
+    this.mainArtists = concatArtists(this.artists.main);
     this.smallCoverUrl = Mixtape.retrieveCoverUrl(this.images, ImageSize.small);
     this.mediumCoverUrl = Mixtape.retrieveCoverUrl(
       this.images,

@@ -3,7 +3,12 @@
     <div class="inner-wrapper">
       <div class="title-artists">
         <h3>{{ song.name }}</h3>
-        <h4>{{ song.mainArtists }}</h4>
+        <h4>
+          <span>{{ song.mainArtists }}</span>
+          <span v-if="song.featureArtists" class="features">
+            (feat. {{ song.featureArtists }})
+          </span>
+        </h4>
       </div>
 
       <div class="duration">{{ song.formattedDuration }}</div>
@@ -14,8 +19,10 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import { Song } from "@/models/song";
+import Featured from "@/views/Featured.vue";
 
 @Options({
+  components: { Featured },
   props: {
     song: Song,
   },
@@ -33,10 +40,6 @@ export default class SongItem extends Vue {}
   text-align: left;
   min-height: auto;
   padding: 12px;
-
-  &:focus {
-    @extend .el-button;
-  }
 
   &:active {
     border-color: var(--el-color-primary-light-7);
@@ -74,6 +77,10 @@ export default class SongItem extends Vue {}
 
   h4 {
     font-weight: 500;
+
+    .features {
+      font-size: var(--el-font-size-extra-small);
+    }
   }
 }
 
