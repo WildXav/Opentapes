@@ -6,3 +6,9 @@ export interface Image {
   medium: string;
   type: string;
 }
+
+export enum ImageSize {
+  small = "small",
+  medium = "medium",
+  large = "large",
+}

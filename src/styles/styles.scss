@@ -60,3 +60,13 @@ body {
 .icon-button > span {
   display: flex;
 }
+
+.el-menu-item > div:focus {
+  outline: 0;
+}
+
+.el-button:focus:not(:hover) {
+  background: var(--el-button-background-color,var(--el-color-white));
+  color: var(--el-button-font-color,var(--el-text-color-regular));
+  border-color: var(--el-button-border-color,var(--el-border-color-base));
+}

@@ -42,7 +42,7 @@ import SessionDialog from "@/components/SessionDialog.vue";
 import { Command } from "@/models/backend/command";
 import ErrorDialog from "@/components/ErrorDialog.vue";
 import { ErrorDialogData } from "@/models/error-dialog-data";
-import MixtapeDetails from "@/components/MixtapeDetails.vue";
+import MixtapeDetails from "@/views/MixtapeDetails.vue";
 import { Mixtape } from "@/models/mixtape";
 
 @Options({

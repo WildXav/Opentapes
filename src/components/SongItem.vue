@@ -1,0 +1,84 @@
+<template>
+  <el-button>
+    <div class="inner-wrapper">
+      <div class="title-artists">
+        <h3>{{ song.name }}</h3>
+        <h4>{{ song.mainArtists }}</h4>
+      </div>
+
+      <div class="duration">{{ song.formattedDuration }}</div>
+    </div>
+  </el-button>
+</template>
+
+<script lang="ts">
+import { Options, Vue } from "vue-class-component";
+import { Song } from "@/models/song";
+
+@Options({
+  props: {
+    song: Song,
+  },
+})
+export default class SongItem extends Vue {}
+</script>
+
+<style lang="scss" scoped>
+.el-button {
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-radius: 0;
+  margin: 0 !important;
+  text-align: left;
+  min-height: auto;
+  padding: 12px;
+
+  &:focus {
+    @extend .el-button;
+  }
+
+  &:active {
+    border-color: var(--el-color-primary-light-7);
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.inner-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.title-artists {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  overflow: hidden;
+
+  h3,
+  h4 {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  h3 {
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+
+  h4 {
+    font-weight: 500;
+  }
+}
+
+.duration {
+  display: flex;
+  align-items: center;
+}
+</style>

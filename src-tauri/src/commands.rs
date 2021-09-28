@@ -3,7 +3,7 @@ use crate::mm_session::MMSession;
 use crate::error::{Error};
 use serde_json::Value;
 use crate::mm_endpoints::{mm_url, fetch};
-use crate::mm_endpoints::MMEndpoint::{Features, Latest, TrendingMixtapes, GreatestMixtapes};
+use crate::mm_endpoints::MMEndpoint::{Features, Latest, TrendingMixtapes, GreatestMixtapes, AlbumDetails};
 
 //noinspection RsWrongGenericArgumentsNumber
 #[command]
@@ -46,5 +46,12 @@ pub(crate) async fn fetch_greatest_tapes(session: MMSession, page: u32, size: u3
     let req = reqwest::Client::new()
         .get(mm_url(GreatestMixtapes))
         .query(&[("page", page), ("size", size)]);
+    fetch(req, session).await
+}
+
+#[command]
+pub(crate) async fn fetch_album_details(session: MMSession, album_id: u32) -> Result<Value, Error> {
+    let path = format!("{}{}", mm_url(AlbumDetails), album_id);
+    let req = reqwest::Client::new().get(path);
     fetch(req, session).await
 }

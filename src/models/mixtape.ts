@@ -1,5 +1,5 @@
-import { Image } from "@/models/image";
-import { Artist, Artists } from "@/models/artist";
+import { Image, ImageSize } from "@/models/image";
+import { Artists, concatMainArtists } from "@/models/artist";
 import dayjs from "dayjs";
 
 export class Mixtape {
@@ -12,27 +12,31 @@ export class Mixtape {
   readonly releaseDate: dayjs.Dayjs;
   readonly mainArtists: string;
   readonly smallCoverUrl: string | null;
+  readonly mediumCoverUrl: string | null;
 
-  constructor(fromJson: Record<string, unknown>) {
-    this.id = fromJson.id as number;
-    this.name = fromJson.name as string;
-    this.description = fromJson.description as string;
-    this.isSingle = fromJson.single as boolean;
-    this.images = fromJson.images as Array<Image>;
-    this.artists = fromJson.artists as Artists;
-    this.releaseDate = dayjs(fromJson.releaseDate as string);
+  constructor(json: Record<string, unknown>) {
+    this.id = json.id as number;
+    this.name = json.name as string;
+    this.description = json.description as string;
+    this.isSingle = json.single as boolean;
+    this.images = json.images as Array<Image>;
+    this.artists = json.artists as Artists;
+    this.releaseDate = dayjs(json.releaseDate as string);
 
-    this.mainArtists = Mixtape.concatArtists(this.artists.main);
-    this.smallCoverUrl = Mixtape.retrieveSmallCoverUrl(this.images);
+    this.mainArtists = concatMainArtists(this.artists.main);
+    this.smallCoverUrl = Mixtape.retrieveCoverUrl(this.images, ImageSize.small);
+    this.mediumCoverUrl = Mixtape.retrieveCoverUrl(
+      this.images,
+      ImageSize.medium
+    );
   }
 
-  private static concatArtists(artists: Array<Artist>): string {
-    return artists.map((artist) => artist.name).join(", ");
-  }
-
-  private static retrieveSmallCoverUrl(images: Array<Image>): string | null {
+  private static retrieveCoverUrl(
+    images: Array<Image>,
+    size: ImageSize
+  ): string | null {
     if (images.length === 0) return null;
-    const smallCovers = images.map((image: Image) => image.small);
+    const smallCovers = images.map((image: Image) => image[size]);
     return smallCovers.length === 0 ? null : smallCovers[0];
   }
 }
