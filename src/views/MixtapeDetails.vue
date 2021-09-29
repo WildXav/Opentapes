@@ -4,7 +4,7 @@
       class="cover"
       :style="{ 'background-image': 'url(\'' + tape.mediumCoverUrl + '\')' }"
     >
-      <div class="title">
+      <div class="title select">
         <h1>{{ tape.name }}</h1>
       </div>
     </div>

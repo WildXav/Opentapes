@@ -29,7 +29,12 @@ export class Song {
   }
 
   private static formatDuration(duration: number): string {
-    const minutes = (duration / 60).toFixed(2);
-    return minutes.toString().replace(".", ":");
+    const minutes = Math.floor(duration / 60);
+    const seconds = duration - minutes * 60;
+    return `${Song.formatNumber(minutes)}:${Song.formatNumber(seconds)}`;
+  }
+
+  private static formatNumber(nb: number): string {
+    return nb >= 10 ? `${nb}` : `0${nb}`;
   }
 }
