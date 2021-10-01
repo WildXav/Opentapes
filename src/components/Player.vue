@@ -105,8 +105,7 @@ export default class Player extends Vue {
   width: 150%;
   height: 150%;
   z-index: -1;
-  opacity: 0.4;
-  filter: blur(3px);
+  opacity: 0.25;
   background-position: center;
   background-size: cover;
 }
