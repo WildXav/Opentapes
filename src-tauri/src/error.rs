@@ -10,6 +10,12 @@ pub(crate) struct Error {
 
 impl std::error::Error for Error {}
 
+impl From<reqwest::Error> for Error {
+    fn from(e: reqwest::Error) -> Self {
+        Error::new(ErrorReason::HTTPFailure, e.to_string())
+    }
+}
+
 impl fmt::Display for Error {
     fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
         write!(formatter, "{}", self.reason.as_str())
@@ -38,6 +44,7 @@ impl Error {
 pub(crate) enum ErrorReason {
     HTTPFailure,
     SessionFetchingFailed,
+    SongLocationRetrievalFailed,
     UnexpectedResponse,
 }
 
@@ -46,6 +53,7 @@ impl ErrorReason {
         match *self {
             ErrorReason::HTTPFailure => "HTTP failure",
             ErrorReason::SessionFetchingFailed => "Session fetching failed",
+            ErrorReason::SongLocationRetrievalFailed => "Song location retrieval failed",
             ErrorReason::UnexpectedResponse => "Unexpected response",
         }
     }

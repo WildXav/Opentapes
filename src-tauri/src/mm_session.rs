@@ -61,6 +61,8 @@ impl MMSession {
 #[cfg(test)]
 mod tests {
     use crate::mm_session::MMSession;
+    use reqwest::header::{COOKIE, LOCATION};
+    use reqwest::redirect;
 
     // TODO: Write proper tests
     #[test]
@@ -74,6 +76,49 @@ mod tests {
 
         println!("Cookie: {}", cookie);
         println!("X-MM-VERIFIER: {}", verifier);
+
+        assert_eq!(0, 0);
+    }
+
+    #[test]
+    fn test2() {
+        let session = MMSession {
+            cookie: String::from("mm-credentials_refresh=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey\
+            J1c2VyX25hbWUiOiIwIiwic2NvcGUiOlsicmVhZCJdLCJhdGkiOiI5MzBkYzk5YS1lNzM2LTQ3MTEtOTYwNy0yY\
+            mM1N2JlYmRhZTYiLCJleHAiOjE2NDA4OTIxMDEsImF1dGhvcml0aWVzIjpbIlJPTEVfR1VFU1QiXSwianRpIjoi\
+            NzE1Njg3ZTctNjFmYi00OGZhLWFiZGItZjk5YTNkM2U5Y2ZmIiwiY2xpZW50X2lkIjoid2VicGxheWVyIn0.OX-\
+            sdB77HSBKEzLN2V4Lkrq0wWHIHJFzsj8Waufy4fE; Path=/; Expires=Sun, 31 Oct 2021 19:21:41 GMT\
+            ; HttpOnly; Secure;mm-credentials_access=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiO\
+            jE2MzU3MDgxMDEsInVzZXJfbmFtZSI6IjAiLCJhdXRob3JpdGllcyI6WyJST0xFX0dVRVNUIl0sImp0aSI6Ijkz\
+            MGRjOTlhLWU3MzYtNDcxMS05NjA3LTJiYzU3YmViZGFlNiIsImNsaWVudF9pZCI6IndlYnBsYXllciIsInNjb3B\
+            lIjpbInJlYWQiXX0.xtvfsoU3p7C0WGattcUVmTpeU7KlWlBb5ny2FFAHTl8; Path=/; Expires=Sun, 31 O\
+            ct 2021 19:21:41 GMT; HttpOnly; Secure;mm-credentials_type=bearer; Path=/; Expires=Sun,\
+             31 Oct 2021 19:21:41 GMT; HttpOnly; Secure"),
+            verifier: String::from("Yj4A9TcKnlgarYqH_IF2tC9qQiU"),
+        };
+
+        let response = reqwest::blocking::Client::builder()
+            .redirect(redirect::Policy::none())
+            .build()
+            .unwrap()
+            .get("https://mymixtapez.com/api/songs/59828/stream")
+            .header(COOKIE, session.cookie)
+            .header("x-mm-verifier", session.verifier)
+            .send()
+            .unwrap();
+
+        let status = response.status();
+
+        dbg!(status);
+
+        let location = response.headers()
+            .get(LOCATION)
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .replace("/low", "/original");
+
+        dbg!(location);
 
         assert_eq!(0, 0);
     }

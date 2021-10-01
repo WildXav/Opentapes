@@ -2,7 +2,10 @@
   <el-button>
     <div class="inner-wrapper">
       <div class="title-artists">
-        <h3>{{ song.name }}</h3>
+        <h3 :class="{ playing: isPlaying }">
+          <svg-icon :name="'headphones'"></svg-icon>
+          <span>{{ song.name }}</span>
+        </h3>
         <h4>
           <span>{{ song.mainArtists }}</span>
           <span v-if="song.featureArtists" class="features">
@@ -20,11 +23,19 @@
 import { Options, Vue } from "vue-class-component";
 import { Song } from "@/models/song";
 import Featured from "@/views/Featured.vue";
+import SvgIcon from "@/components/SvgIcon.vue";
 
 @Options({
-  components: { Featured },
+  components: { Featured, SvgIcon },
   props: {
-    song: Song,
+    song: {
+      type: Song,
+      required: true,
+    },
+    isPlaying: {
+      type: Boolean,
+      required: true,
+    },
   },
 })
 export default class SongItem extends Vue {}
@@ -71,8 +82,32 @@ export default class SongItem extends Vue {}
   }
 
   h3 {
+    display: flex;
     margin-bottom: 5px;
     font-weight: 600;
+
+    &.playing {
+      color: #3a8ee6;
+
+      svg {
+        display: inline-block;
+      }
+
+      span {
+        padding-top: 1px;
+        margin-left: 5px;
+      }
+    }
+
+    svg {
+      display: none;
+      width: 15px;
+      height: 15px;
+    }
+
+    span {
+      display: block;
+    }
   }
 
   h4 {

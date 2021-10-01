@@ -18,6 +18,7 @@ fn main() {
             commands::fetch_trending_tapes,
             commands::fetch_greatest_tapes,
             commands::fetch_album_details,
+            commands::fetch_song_location,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

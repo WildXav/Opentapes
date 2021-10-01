@@ -12,7 +12,13 @@
     <div v-if="loading" v-loading="true" class="loader"></div>
 
     <div v-if="!loading && songs" class="songs-container">
-      <SongItem v-for="song in songs" :key="song.id" :song="song"></SongItem>
+      <SongItem
+        v-for="song in songs"
+        @click="playSong(song)"
+        :key="song.id"
+        :song="song"
+        :is-playing="songPlaying?.id === song.id"
+      ></SongItem>
     </div>
   </div>
 </template>
@@ -36,6 +42,7 @@ import SongItem from "@/components/SongItem.vue";
   computed: {
     session: (): MMSession | null => store.state.core.session,
     songs: (): Array<Song> | null => store.state.core.selectedTapeSongs,
+    songPlaying: (): Song | null => store.state.playing.songPlaying,
   },
   watch: {
     session() {
@@ -62,6 +69,12 @@ export default class MixtapeDetails extends Vue {
       store.dispatch
         .fetchTapeSongs(this.session)
         .then(() => (this.loading = false));
+    }
+  }
+
+  playSong(song: Song): void {
+    if (this.session) {
+      store.dispatch.setPlaylist({ session: this.session, playlist: [song] });
     }
   }
 }

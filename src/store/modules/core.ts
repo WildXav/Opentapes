@@ -199,7 +199,7 @@ const actions = {
       return;
     }
 
-    const songs = await DetailsService.fetchSongs(session, tape.id, () =>
+    const songs = await DetailsService.fetchSongs(session, tape, () =>
       store.dispatch.fetchTapeSongs(session)
     );
     context.commit(Mutations.FETCH_TAPE_SONGS, songs);

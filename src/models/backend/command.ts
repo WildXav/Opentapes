@@ -12,6 +12,7 @@ export enum Command {
   FetchTrendingTapes = "fetch_trending_tapes",
   FetchGreatestTapes = "fetch_greatest_tapes",
   FetchAlbumDetails = "fetch_album_details",
+  FetchSongLocation = "fetch_song_location",
 }
 
 export function execCmd<T>(

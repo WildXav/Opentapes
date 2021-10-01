@@ -16,6 +16,7 @@ pub(crate) enum MMEndpoint {
     TrendingSongs,
     GreatestSongs,
     AlbumDetails,
+    SongDetails,
 }
 
 pub(crate) fn mm_url(endpoint: MMEndpoint) -> String {
@@ -28,6 +29,7 @@ pub(crate) fn mm_url(endpoint: MMEndpoint) -> String {
         MMEndpoint::TrendingSongs => format!("{}/api/songs/trending", BASE_URL),
         MMEndpoint::GreatestSongs => format!("{}/api/songs/best", BASE_URL),
         MMEndpoint::AlbumDetails => format!("{}/api/albums/", BASE_URL),
+        MMEndpoint::SongDetails => format!("{}/api/songs/", BASE_URL),
     }
 }
 
@@ -36,8 +38,7 @@ pub(crate) async fn fetch(req_builder: RequestBuilder, session: MMSession) -> Re
         .header(COOKIE, session.cookie)
         .header("x-mm-verifier", session.verifier)
         .send()
-        .await
-        .map_err(|e| Error::new(ErrorReason::HTTPFailure, e.to_string()))?;
+        .await?;
 
     if !response.status().is_success() {
         return Err(Error::new(
