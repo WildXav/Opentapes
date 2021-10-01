@@ -8,7 +8,9 @@ export interface Image {
 }
 
 export enum ImageSize {
-  small = "small",
-  medium = "medium",
-  large = "large",
+  Tiny = "tiny",
+  Thumbnail = "thumbnail",
+  Small = "small",
+  Medium = "medium",
+  Large = "large",
 }

@@ -29,11 +29,6 @@ body {
   color: var(--el-text-color-primary);
 }
 
-// TODO: those padding are only for mobile display
-.el-header, .el-footer {
-  padding: 10px;
-}
-
 .el-main {
   position: relative;
   padding: 0;
@@ -42,12 +37,14 @@ body {
 }
 
 .el-header {
+  padding: 10px;
   border-bottom: var(--el-border-base);
 }
 
 .el-footer {
   border-top: var(--el-border-base);
   padding: 0;
+  height: 61px;
 }
 
 .el-dialog {

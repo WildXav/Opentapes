@@ -46,7 +46,6 @@ const getters = {
 
 enum Mutations {
   SET_PLAYLIST = "SET_PLAYLIST",
-  FETCH_SONGS_LOCATION = "FETCH_SONGS_LOCATION",
   SET_SONG_PLAYING = "SET_SONG_PLAYING",
   SET_IS_PLAYING = "SET_IS_PLAYING",
   SET_IS_LOADING_PLAYLIST = "SET_IS_LOADING_PLAYLIST",
@@ -60,14 +59,6 @@ const mutations = {
     state.playlist = payload.playlist;
     state.songsLocation = payload.songsLocation;
     state.queue = payload.playlist.map((song) => song.id);
-    state.isLoadingPlaylist = false;
-    state.isPlaying = true;
-  },
-  [Mutations.FETCH_SONGS_LOCATION]: (
-    state: PlayingState,
-    songsLocation: Array<SongLocation>
-  ) => {
-    state.songsLocation = songsLocation;
     state.isLoadingPlaylist = false;
   },
   [Mutations.SET_SONG_PLAYING]: (

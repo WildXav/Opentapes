@@ -1,17 +1,30 @@
 <template>
   <div class="container">
-    <div
-      class="background"
-      :style="{
-        'background-image': 'url(\'' + songPlaying?.mediumCoverUrl + '\')',
-      }"
-    />
-    <div v-if="isLoadingPlaylist || buffering" v-loading="true"></div>
-    <div class="song-details select">
-      <template v-if="!isLoadingPlaylist && !buffering">
-        <h4 class="title">{{ songPlaying?.name }}</h4>
-        <div class="artists">{{ songPlaying?.mainArtists }}</div>
+    <div class="song-details-wrapper">
+      <div v-if="!isReady()" v-loading="true"></div>
+      <template v-else-if="songPlaying">
+        <img :src="songPlaying.thumbnailCoverUrl" alt="cover" />
+
+        <div class="song-details select">
+          <h4 class="title">{{ songPlaying.name }}</h4>
+          <div class="artists">
+            <span>{{ songPlaying.mainArtists }}</span>
+            <span v-if="songPlaying.featureArtists" class="features">
+              (feat. {{ songPlaying.featureArtists }})
+            </span>
+          </div>
+        </div>
       </template>
+    </div>
+
+    <div class="controls">
+      <PlayerControlBtn icon-name="step-backward" @click="resetPlayback()" />
+      <PlayerControlBtn
+        :icon-name="isReady() && isPlaying ? 'pause' : 'play'"
+        :disabled="!isReady() || !songPlaying"
+        @clicked="togglePlayback()"
+      />
+      <PlayerControlBtn icon-name="step-forward" />
     </div>
   </div>
 </template>
@@ -21,8 +34,12 @@ import store from "@/store";
 import { Options, Vue } from "vue-class-component";
 import { SongLocation } from "@/models/song-location";
 import { Song } from "@/models/song";
+import PlayerControlBtn from "@/components/PlayerControlBtn.vue";
 
 @Options({
+  components: {
+    PlayerControlBtn,
+  },
   props: {
     playlist: {
       type: Array,
@@ -50,8 +67,26 @@ import { Song } from "@/models/song";
     },
   },
   watch: {
+    queue(newQueue, oldQueue) {
+      if (newQueue[0] !== oldQueue[0]) {
+        this.play();
+      } else {
+        this.resetPlayback();
+        if (!this.isPlaying) {
+          store.dispatch.setIsPlaying(true);
+        }
+      }
+    },
     isPlaying() {
-      this.isPlaying ? this.play() : this.pause();
+      const audioPlaying = !this.audio.paused && !this.audio.ended;
+      if (
+        (this.isPlaying && audioPlaying) ||
+        (!this.isPlaying && !audioPlaying)
+      ) {
+        return;
+      }
+
+      this.isPlaying ? this.resume() : this.pause();
     },
   },
 })
@@ -59,32 +94,53 @@ export default class Player extends Vue {
   private playlist!: ReadonlyArray<Song>;
   private songsLocation!: ReadonlyArray<SongLocation>;
   private queue!: ReadonlyArray<number>;
+  private isPlaying!: boolean;
   private isLoadingPlaylist!: boolean;
   private audio = new Audio();
-  private buffering = false;
-
-  isReady(): boolean {
-    return (
-      !this.isLoadingPlaylist &&
-      !(this.audio && !this.audio.paused && this.audio.currentTime === 0)
-    );
-  }
+  private isBuffering = false;
 
   play(): void {
     const songId = this.queue[0];
     const songUrl = this.songsLocation
       .filter((e) => e.songId === songId)
       .map((e) => e.url)[0];
-    const song = this.playlist.find((e) => e.id === songId);
-    store.dispatch.setSongPlaying(song || null);
     this.audio = new Audio(songUrl);
+    this.audio.addEventListener("waiting", () => (this.isBuffering = true));
+    this.audio.addEventListener("playing", () => (this.isBuffering = false));
+    this.audio.addEventListener("ended", () =>
+      store.dispatch.setIsPlaying(false)
+    );
+
+    const song = this.playlist.find((e) => e.id === songId) || null;
+    store.dispatch.setSongPlaying(song);
+    store.dispatch.setIsPlaying(true);
+  }
+
+  resume(): void {
+    if (this.audio.ended) {
+      this.resetPlayback();
+    }
     this.audio.play();
-    this.audio.addEventListener("waiting", () => (this.buffering = true));
-    this.audio.addEventListener("playing", () => (this.buffering = false));
   }
 
   pause(): void {
     this.audio.pause();
+  }
+
+  resetPlayback(): void {
+    this.audio.currentTime = 0;
+  }
+
+  isReady(): boolean {
+    return !this.isLoadingPlaylist && !this.isBuffering;
+  }
+
+  isAudioPlaying(): boolean {
+    return !this.audio.paused && !this.audio.ended;
+  }
+
+  togglePlayback(): void {
+    store.dispatch.setIsPlaying(!this.isPlaying);
   }
 }
 </script>
@@ -93,28 +149,28 @@ export default class Player extends Vue {
 .container {
   display: flex;
   align-items: center;
-  padding: 0 10px;
   height: 100%;
-  position: relative;
+  padding: 10px;
 }
 
-.background {
-  position: absolute;
-  top: -25%;
-  left: -25%;
-  width: 150%;
-  height: 150%;
-  z-index: -1;
-  opacity: 0.25;
-  background-position: center;
-  background-size: cover;
+.song-details-wrapper {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex: 1 1 auto;
+  overflow: hidden;
+
+  img {
+    height: 100%;
+    margin-right: 5px;
+    border-radius: 3px;
+  }
 }
 
 .song-details {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  text-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
   overflow: hidden;
 
   .title,
@@ -122,14 +178,34 @@ export default class Player extends Vue {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  .title {
-    margin: 0 0 3px;
+    margin: 0;
   }
 
   .artists {
     font-size: var(--el-font-size-base);
+
+    .features {
+      font-size: var(--el-font-size-small);
+    }
+  }
+}
+
+.controls {
+  display: flex;
+  flex: 0 0 auto;
+  height: 100%;
+
+  .control-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 5px;
+    width: 40px;
+    height: 40px;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }
 </style>

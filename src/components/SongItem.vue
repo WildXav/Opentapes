@@ -4,7 +4,7 @@
       <div class="title-artists">
         <h3 :class="{ playing: isPlaying }">
           <svg-icon :name="'headphones'"></svg-icon>
-          <span>{{ song.name }}</span>
+          {{ song.name }}
         </h3>
         <h4>
           <span>{{ song.mainArtists }}</span>
@@ -82,7 +82,6 @@ export default class SongItem extends Vue {}
   }
 
   h3 {
-    display: flex;
     margin-bottom: 5px;
     font-weight: 600;
 
@@ -92,21 +91,12 @@ export default class SongItem extends Vue {}
       svg {
         display: inline-block;
       }
-
-      span {
-        padding-top: 1px;
-        margin-left: 5px;
-      }
     }
 
     svg {
       display: none;
-      width: 15px;
-      height: 15px;
-    }
-
-    span {
-      display: block;
+      width: 12px;
+      height: 12px;
     }
   }
 

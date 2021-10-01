@@ -11,6 +11,7 @@ export class Mixtape {
   readonly artists: Artists;
   readonly releaseDate: dayjs.Dayjs;
   readonly mainArtists: string;
+  readonly thumbnailCoverUrl: string | null;
   readonly smallCoverUrl: string | null;
   readonly mediumCoverUrl: string | null;
 
@@ -24,10 +25,14 @@ export class Mixtape {
     this.releaseDate = dayjs(json.releaseDate as string);
 
     this.mainArtists = concatArtists(this.artists.main);
-    this.smallCoverUrl = Mixtape.retrieveCoverUrl(this.images, ImageSize.small);
+    this.thumbnailCoverUrl = Mixtape.retrieveCoverUrl(
+      this.images,
+      ImageSize.Thumbnail
+    );
+    this.smallCoverUrl = Mixtape.retrieveCoverUrl(this.images, ImageSize.Small);
     this.mediumCoverUrl = Mixtape.retrieveCoverUrl(
       this.images,
-      ImageSize.medium
+      ImageSize.Medium
     );
   }
 
