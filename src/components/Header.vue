@@ -1,101 +1,73 @@
 <template>
-  <div id="header">
-    <div class="breadcrumb">
-      <div
-        class="page-title"
-        :class="{ active: !showSecondaryView }"
-        @click="toggleSecondaryView(false)"
-      >
-        {{ primaryViewTitle }}
-      </div>
-
-      <template v-if="!!secondaryViewTitle">
-        <div class="separator">|</div>
-        <div
-          class="page-title"
-          :class="{ active: showSecondaryView }"
-          @click="toggleSecondaryView(true)"
-        >
-          {{ secondaryViewTitle }}
-        </div>
-      </template>
-    </div>
-  </div>
+  <n-layout-header
+    bordered
+    class="app-header px-5"
+    :style="{ height: config.headerHeight + 'px' }"
+  >
+    <n-tabs
+      v-if="!!primaryViewTitle"
+      :class="{ disabled: !secondaryViewTitle }"
+      size="large"
+    >
+      <n-tab-pane name="primary-view" :tab="primaryViewTitle" />
+      <n-tab-pane
+        v-if="!!secondaryViewTitle"
+        name="secondary-view"
+        :tab="secondaryViewTitle"
+      />
+    </n-tabs>
+  </n-layout-header>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
 import store from "@/store";
+import { Options, Vue } from "vue-class-component";
+import { CONFIG } from "@/config";
 
 @Options({
   props: {
     primaryViewTitle: String,
     secondaryViewTitle: String,
-    showSecondaryView: Boolean,
+    isSecondaryViewActive: {
+      type: Boolean,
+      required: true,
+    },
   },
 })
 export default class Header extends Vue {
-  showSecondaryView!: boolean;
+  isSecondaryViewActive!: boolean;
+  readonly config = CONFIG;
 
   toggleSecondaryView(value: boolean): void {
-    if (this.showSecondaryView === value) {
-      return;
-    }
+    if (this.isSecondaryViewActive === value) return;
     store.dispatch.toggleSecondaryView(value);
   }
 }
 </script>
 
-<style lang="scss" scoped>
-#header {
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  padding-top: 1px;
-  margin: 0;
-  font-size: 18px;
-  overflow: hidden;
-
-  .page-title {
-    padding-top: 3px;
-    font-size: inherit;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: inherit;
-    text-overflow: ellipsis;
-    cursor: pointer;
-    color: var(--el-color-info);
-
-    &:first-child {
-      overflow: visible;
-    }
-
-    &:hover {
-      color: var(--el-color-primary);
-    }
-
-    &.active,
-    &.active:hover {
-      color: var(--el-text-color-regular);
-      cursor: default;
-    }
-  }
-
-  .separator {
-    margin: 0 5px;
-    font-weight: bold;
-  }
-}
-</style>
-
 <style lang="scss">
-#header #navBtn svg {
-  width: 18px;
-  height: 18px;
+.app-header {
+  .n-tabs,
+  .n-tabs-nav,
+  .n-tabs-tab-wrapper,
+  .n-tabs-tab,
+  .v-x-scroll,
+  .n-tabs-nav-scroll-content {
+    @apply h-full;
+  }
+
+  .n-tabs.disabled {
+    .n-tabs-tab {
+      @apply cursor-default;
+
+      .n-tabs-tab__label {
+        color: var(--tab-text-color);
+      }
+    }
+
+    .n-tabs-bar {
+      @apply hidden;
+    }
+  }
 }
 </style>

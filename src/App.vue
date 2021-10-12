@@ -1,147 +1,118 @@
-<style src="./styles/styles.scss" lang="scss"></style>
-
 <template>
-  <el-container class="wrapper">
-    <el-container>
-      <Sidenav />
-
-      <el-container>
-        <el-header>
-          <Header
-            :primary-view-title="primaryViewTitle()"
-            :secondary-view-title="secondaryViewTitle()"
-            :show-secondary-view="showSecondaryView()"
+  <n-config-provider class="flex flex-col h-full w-full" :theme="darkTheme">
+    <n-layout has-sider>
+      <n-layout-sider
+        bordered
+        position="absolute"
+        collapse-mode="width"
+        :collapsed-width="config.sidenavCollapsedWidth"
+        :width="config.sidenavWidth"
+        :collapsed="collapsed"
+        show-trigger
+        @collapse="collapsed = true"
+        @expand="collapsed = false"
+      >
+        <n-space vertical justify="space-between" class="h-full">
+          <n-menu
+            :collapsed="collapsed"
+            :collapsed-width="config.sidenavCollapsedWidth"
+            :collapsed-icon-size="config.sidenavIconSize"
+            :options="mainMenuOptions"
+            :value="$route.meta['key']"
           />
-        </el-header>
 
-        <el-main>
+          <n-menu
+            :collapsed="collapsed"
+            :collapsed-width="config.sidenavCollapsedWidth"
+            :collapsed-icon-size="config.sidenavIconSize"
+            :options="secondaryMenuOptions"
+            value=""
+          />
+        </n-space>
+      </n-layout-sider>
+
+      <n-layout
+        class="inner-layout"
+        :style="{ 'padding-left': config.sidenavCollapsedWidth + 'px' }"
+      >
+        <Header
+          :primary-view-title="primaryViewTitle"
+          :secondary-view-title="secondaryViewTitle"
+          :is-secondary-view-active="isSecondaryViewActive"
+        />
+
+        <n-layout>
           <router-view />
-          <MixtapeDetails
-            v-if="!!getSelectedTape()"
-            v-show="showSecondaryView()"
-            :tape="getSelectedTape()"
-          />
-        </el-main>
-      </el-container>
-    </el-container>
+        </n-layout>
+      </n-layout>
+    </n-layout>
 
-    <el-footer>
-      <Player
-        :playlist="getPlaylist()"
-        :songs-location="getSongsLocation()"
-        :queue="getQueue()"
-        :song-playing="getSongPlaying()"
-        :is-playing="getIsPlaying()"
-        :is-loading-playlist="getIsLoadingPlaylist()"
-      />
-    </el-footer>
-  </el-container>
+    <n-layout-footer
+      bordered
+      class="p-5"
+      :style="{ height: config.footerHeight + 'px' }"
+    >
+      Chengfu Road
+    </n-layout-footer>
 
-  <SessionDialog :session-loading="isLoadingSession()" />
-  <ErrorDialog :dialogData="getErrorDialogData()" />
+    <SessionDialog :is-loading-session="isLoadingSession" />
+    <ErrorDialog :dialog-data="errorDialogData" />
+  </n-config-provider>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import { invoke } from "@tauri-apps/api";
 import store from "@/store";
-import Header from "@/components/Header.vue";
-import Sidenav from "@/components/Sidenav.vue";
-import SessionDialog from "@/components/SessionDialog.vue";
+import { Options, Vue } from "vue-class-component";
+import { darkTheme } from "naive-ui";
+import { ROUTES, routesToMenuOption } from "@/router/routes";
+import { SettingsOutline } from "@vicons/ionicons5";
+import { renderIcon } from "@/helpers/render-helper";
+import { CONFIG } from "@/config";
+import { invoke } from "@tauri-apps/api";
 import { Command } from "@/models/backend/command";
 import ErrorDialog from "@/components/ErrorDialog.vue";
 import { ErrorDialogData } from "@/models/error-dialog-data";
-import MixtapeDetails from "@/views/MixtapeDetails.vue";
-import { Mixtape } from "@/models/mixtape";
-import Player from "@/components/Player.vue";
-import { Song } from "@/models/song";
-import { SongLocation } from "@/models/song-location";
+import SessionDialog from "@/components/SessionDialog.vue";
+import Header from "@/components/Header.vue";
 
 @Options({
-  components: {
-    Player,
-    ErrorDialog,
-    Header,
-    MixtapeDetails,
-    SessionDialog,
-    Sidenav,
-  },
-  watch: {
-    $route() {
-      if (store.getters.showSecondaryView) {
-        store.dispatch.toggleSecondaryView(false);
-      }
+  computed: {
+    errorDialogData: (): ErrorDialogData | null => {
+      return store.getters.errorDialogData;
+    },
+    isLoadingSession: (): boolean => {
+      return store.getters.isLoadingSession;
+    },
+    primaryViewTitle: (): string | null => {
+      return store.getters.primaryViewTitle;
+    },
+    secondaryViewTitle: (): string | null => {
+      return store.getters.secondaryViewTitle;
+    },
+    isSecondaryViewActive: (): boolean => {
+      return store.getters.isSecondaryViewActive;
     },
   },
+  components: { Header, SessionDialog, ErrorDialog },
 })
-export default class App extends Vue {
+export default class Home extends Vue {
+  readonly darkTheme = darkTheme;
+  readonly mainMenuOptions = ROUTES.map((route) => routesToMenuOption(route));
+  readonly secondaryMenuOptions = [
+    {
+      label: "Settings",
+      key: "settings",
+      icon: renderIcon(SettingsOutline),
+    },
+  ];
+  readonly config = CONFIG;
+  collapsed = true;
+
   mounted(): void {
-    invoke(Command.ShowWindow);
-    window.addEventListener("resize", this.onResize);
-    this.onResize();
-    store.dispatch.setIsLoadingSession(true);
-  }
-
-  isLoadingSession(): boolean {
-    return store.getters.isLoadingSession;
-  }
-
-  primaryViewTitle(): string | null {
-    return store.getters.primaryViewTitle;
-  }
-
-  secondaryViewTitle(): string | null {
-    return store.getters.secondaryViewTitle;
-  }
-
-  showSecondaryView(): boolean {
-    return store.getters.showSecondaryView;
-  }
-
-  getErrorDialogData(): ErrorDialogData | null {
-    return store.getters.errorDialogData;
-  }
-
-  getSelectedTape(): Mixtape | null {
-    return store.getters.selectedTape;
-  }
-
-  getPlaylist(): ReadonlyArray<Song> {
-    return store.getters.playlist;
-  }
-
-  getSongsLocation(): ReadonlyArray<SongLocation> {
-    return store.getters.songsLocation;
-  }
-
-  getQueue(): ReadonlyArray<number> {
-    return store.getters.queue;
-  }
-
-  getSongPlaying(): Song | null {
-    return store.getters.songPlaying;
-  }
-
-  getIsPlaying(): boolean {
-    return store.getters.isPlaying;
-  }
-
-  getIsLoadingPlaylist(): boolean {
-    return store.getters.isLoadingPlaylist;
-  }
-
-  onResize(): void {
-    store.dispatch.updateBreakpoints();
+    this.$nextTick(() => {
+      invoke(Command.ShowWindow);
+      store.dispatch.setIsLoadingSession(true);
+    });
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.wrapper {
-  height: 100%;
-
-  > .el-container {
-    overflow: hidden;
-  }
-}
-</style>

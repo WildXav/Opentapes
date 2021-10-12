@@ -1,5 +1,5 @@
 import { Artists, concatArtists } from "@/models/artist";
-import { Mixtape } from "@/models/mixtape";
+import { Album } from "@/models/album";
 
 export class Song {
   readonly id: number;
@@ -13,7 +13,7 @@ export class Song {
   readonly formattedDuration: string;
   readonly thumbnailCoverUrl: string | null;
 
-  constructor(json: Record<string, unknown>, album: Mixtape) {
+  constructor(json: Record<string, unknown>, album: Album) {
     this.id = json.id as number;
     this.name = json.name as string;
     this.size = json.size as number;

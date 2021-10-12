@@ -2,7 +2,7 @@ import { Image, ImageSize } from "@/models/image";
 import { Artists, concatArtists } from "@/models/artist";
 import dayjs from "dayjs";
 
-export class Mixtape {
+export class Album {
   readonly id: number;
   readonly name: string;
   readonly description: string;
@@ -25,15 +25,12 @@ export class Mixtape {
     this.releaseDate = dayjs(json.releaseDate as string);
 
     this.mainArtists = concatArtists(this.artists.main);
-    this.thumbnailCoverUrl = Mixtape.retrieveCoverUrl(
+    this.thumbnailCoverUrl = Album.retrieveCoverUrl(
       this.images,
       ImageSize.Thumbnail
     );
-    this.smallCoverUrl = Mixtape.retrieveCoverUrl(this.images, ImageSize.Small);
-    this.mediumCoverUrl = Mixtape.retrieveCoverUrl(
-      this.images,
-      ImageSize.Medium
-    );
+    this.smallCoverUrl = Album.retrieveCoverUrl(this.images, ImageSize.Small);
+    this.mediumCoverUrl = Album.retrieveCoverUrl(this.images, ImageSize.Medium);
   }
 
   private static retrieveCoverUrl(

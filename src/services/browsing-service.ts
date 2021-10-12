@@ -1,4 +1,4 @@
-import { Mixtape } from "@/models/mixtape";
+import { Album } from "@/models/album";
 import { MMSession } from "@/models/backend/mm-session";
 import { Command, execCmd } from "@/models/backend/command";
 
@@ -6,12 +6,12 @@ export abstract class BrowsingService {
   static fetchFeatured(
     session: MMSession,
     retryCb?: () => unknown
-  ): Promise<Array<Mixtape>> {
+  ): Promise<Array<Album>> {
     return execCmd<Array<Record<string, unknown>>>(
       Command.FetchFeatured,
       { session },
       retryCb
-    ).then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)));
+    ).then((jsonArray) => jsonArray.map((jsonValue) => new Album(jsonValue)));
   }
 
   static fetchLatest(
@@ -19,7 +19,7 @@ export abstract class BrowsingService {
     page: number,
     size: number,
     retryCb?: () => unknown
-  ): Promise<Array<Mixtape>> {
+  ): Promise<Array<Album>> {
     const args = {
       session,
       page,
@@ -30,7 +30,7 @@ export abstract class BrowsingService {
       Command.FetchLatest,
       args,
       retryCb
-    ).then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)));
+    ).then((jsonArray) => jsonArray.map((jsonValue) => new Album(jsonValue)));
   }
 
   static fetchTrendingTapes(
@@ -38,7 +38,7 @@ export abstract class BrowsingService {
     page: number,
     size: number,
     retryCb?: () => unknown
-  ): Promise<Array<Mixtape>> {
+  ): Promise<Array<Album>> {
     const args = {
       session,
       page,
@@ -49,7 +49,7 @@ export abstract class BrowsingService {
       Command.FetchTrendingTapes,
       args,
       retryCb
-    ).then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)));
+    ).then((jsonArray) => jsonArray.map((jsonValue) => new Album(jsonValue)));
   }
 
   static fetchGreatestTapes(
@@ -57,7 +57,7 @@ export abstract class BrowsingService {
     page: number,
     size: number,
     retryCb?: () => unknown
-  ): Promise<Array<Mixtape>> {
+  ): Promise<Array<Album>> {
     const args = {
       session,
       page,
@@ -68,6 +68,6 @@ export abstract class BrowsingService {
       Command.FetchGreatestTapes,
       args,
       retryCb
-    ).then((jsonArray) => jsonArray.map((jsonValue) => new Mixtape(jsonValue)));
+    ).then((jsonArray) => jsonArray.map((jsonValue) => new Album(jsonValue)));
   }
 }

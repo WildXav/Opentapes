@@ -1,70 +1,16 @@
-@import '~element-plus/lib/theme-chalk/index.css';
-@import '~element-plus/lib/theme-chalk/display.css';
-
-html, body, #app {
-  width: 100%;
-  height: 100%;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  margin: 0;
-  user-select: none;
-
-  &, * {
-    box-sizing: border-box;
-  }
-
-  .select {
-    user-select: auto;
-  }
+html,
+body,
+#app {
+  @apply w-full h-full;
 }
 
 #app {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: var(--el-text-color-primary);
+  @apply font-sans;
+  @apply select-none;
+  @apply subpixel-antialiased;
 }
 
-.el-main {
-  position: relative;
-  padding: 0;
-  background-color: var(--el-background-color-base);
-  overflow: hidden;
-}
-
-.el-header {
-  padding: 10px;
-  border-bottom: var(--el-border-base);
-}
-
-.el-footer {
-  border-top: var(--el-border-base);
-  padding: 0;
-  height: 61px;
-}
-
-.el-dialog {
-  max-width: 90%;
-}
-
-.el-loading-mask {
-  background-color: transparent;
-}
-
-.icon-button > span {
-  display: flex;
-}
-
-.el-menu-item > div:focus {
-  outline: 0;
-}
-
-.el-button:focus:not(:hover) {
-  background: var(--el-button-background-color,var(--el-color-white));
-  color: var(--el-button-font-color,var(--el-text-color-regular));
-  border-color: var(--el-button-border-color,var(--el-border-color-base));
+.inner-layout .n-layout-scroll-container {
+  @apply flex;
+  @apply flex-col;
 }

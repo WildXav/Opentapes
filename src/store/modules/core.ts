@@ -1,33 +1,30 @@
 import { ActionContext } from "vuex";
 import { defineModule } from "direct-vuex";
-import { Breakpoints } from "@/models/breakpoints";
 import { MMSession } from "@/models/backend/mm-session";
 import { ErrorDialogData } from "@/models/error-dialog-data";
-import { Mixtape } from "@/models/mixtape";
 import { Song } from "@/models/song";
 import { DetailsService } from "@/services/details-service";
 import store from "@/store";
+import { Album } from "@/models/album";
 
 interface CoreState {
   errorDialogData: ErrorDialogData | null;
-  breakpoints: Breakpoints;
   session: MMSession | null;
   isLoadingSession: boolean;
   primaryViewTitle: string | null;
   secondaryViewTitle: string | null;
-  showSecondaryView: boolean;
-  selectedTape: Mixtape | null;
+  isSecondaryViewActive: boolean;
+  selectedTape: Album | null;
   selectedTapeSongs: Array<Song> | null;
 }
 
 const initialState: CoreState = {
   errorDialogData: null,
-  breakpoints: new Breakpoints(),
   session: null,
   isLoadingSession: false,
   primaryViewTitle: null,
   secondaryViewTitle: null,
-  showSecondaryView: false,
+  isSecondaryViewActive: false,
   selectedTape: null,
   selectedTapeSongs: null,
 };
@@ -35,9 +32,6 @@ const initialState: CoreState = {
 const getters = {
   errorDialogData: (state: CoreState): ErrorDialogData | null => {
     return state.errorDialogData;
-  },
-  breakpoints: (state: CoreState): Breakpoints => {
-    return state.breakpoints;
   },
   session: (state: CoreState): MMSession | null => {
     return state.session;
@@ -51,10 +45,10 @@ const getters = {
   secondaryViewTitle: (state: CoreState): string | null => {
     return state.secondaryViewTitle;
   },
-  showSecondaryView: (state: CoreState): boolean => {
-    return state.showSecondaryView;
+  isSecondaryViewActive: (state: CoreState): boolean => {
+    return state.isSecondaryViewActive;
   },
-  selectedTape: (state: CoreState): Mixtape | null => {
+  selectedTape: (state: CoreState): Album | null => {
     return state.selectedTape;
   },
   selectedTapeSongs: (state: CoreState): Array<Song> | null => {
@@ -64,12 +58,11 @@ const getters = {
 
 enum Mutations {
   SET_ERROR_DIALOG_DATA = "SET_ERROR_DIALOG_DATA",
-  BREAKPOINTS_UPDATE = "BREAKPOINTS_UPDATE",
   SET_SESSION = "SET_SESSION",
   SET_IS_LOADING_SESSION = "SET_IS_LOADING_SESSION",
   SET_PRIMARY_VIEW_TITLE = "SET_PRIMARY_VIEW_TITLE",
   SET_SECONDARY_VIEW_TITLE = "SET_SECONDARY_VIEW_TITLE",
-  SET_SHOW_SECONDARY_VIEW = "SET_SHOW_SECONDARY_VIEW",
+  SET_IS_SECONDARY_VIEW_ACTIVE = "SET_IS_SECONDARY_VIEW_ACTIVE",
   SELECT_TAPE = "SELECT_TAPE",
   FETCH_TAPE_SONGS = "FETCH_TAPE_SONGS",
 }
@@ -80,10 +73,6 @@ const mutations = {
     errorDialogData: ErrorDialogData | null
   ) => {
     state.errorDialogData = errorDialogData;
-  },
-
-  [Mutations.BREAKPOINTS_UPDATE]: (state: CoreState) => {
-    state.breakpoints = new Breakpoints(window.innerWidth);
   },
 
   [Mutations.SET_SESSION]: (state: CoreState, session: MMSession) => {
@@ -106,20 +95,20 @@ const mutations = {
     state.secondaryViewTitle = title;
   },
 
-  [Mutations.SET_SHOW_SECONDARY_VIEW]: (
+  [Mutations.SET_IS_SECONDARY_VIEW_ACTIVE]: (
     state: CoreState,
-    showView: boolean
+    isSecondaryViewActive: boolean
   ) => {
-    state.showSecondaryView = showView;
+    state.isSecondaryViewActive = isSecondaryViewActive;
   },
 
-  [Mutations.SELECT_TAPE]: (state: CoreState, tape: Mixtape) => {
+  [Mutations.SELECT_TAPE]: (state: CoreState, tape: Album) => {
     if (!state.selectedTape || state.selectedTape.id !== tape.id) {
       state.selectedTapeSongs = null;
       state.selectedTape = tape;
       state.secondaryViewTitle = tape.name;
     }
-    state.showSecondaryView = true;
+    state.isSecondaryViewActive = true;
   },
 
   [Mutations.FETCH_TAPE_SONGS]: (state: CoreState, songs: Array<Song>) => {
@@ -136,10 +125,6 @@ const actions = {
       console.error(payload.error.reason, payload.error.details);
     }
     context.commit(Mutations.SET_ERROR_DIALOG_DATA, payload);
-  },
-
-  updateBreakpoints(context: ActionContext<unknown, unknown>): void {
-    context.commit(Mutations.BREAKPOINTS_UPDATE);
   },
 
   setSession(
@@ -174,10 +159,10 @@ const actions = {
     context: ActionContext<unknown, unknown>,
     payload: boolean
   ): void {
-    context.commit(Mutations.SET_SHOW_SECONDARY_VIEW, payload);
+    context.commit(Mutations.SET_IS_SECONDARY_VIEW_ACTIVE, payload);
   },
 
-  selectTape(context: ActionContext<unknown, unknown>, payload: Mixtape): void {
+  selectTape(context: ActionContext<unknown, unknown>, payload: Album): void {
     context.commit(Mutations.SELECT_TAPE, payload);
   },
 

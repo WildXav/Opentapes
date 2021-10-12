@@ -1,5 +1,5 @@
 <template>
-  <h1>Latest</h1>
+  <h1>TrendingSingles</h1>
 </template>
 
 <script lang="ts">
@@ -7,5 +7,5 @@ import { Options } from "vue-class-component";
 import MixtapeListView from "@/views/abstract/MixtapeListView.vue";
 
 @Options({})
-export default class Latest extends MixtapeListView {}
+export default class TrendingSingles extends MixtapeListView {}
 </script>
