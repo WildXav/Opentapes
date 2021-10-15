@@ -4,4 +4,6 @@ export const CONFIG = {
   sidenavWidth: 240,
   sidenavCollapsedWidth: 64,
   sidenavIconSize: 22,
+  fetchingSize: 24,
+  gridGap: 12,
 };

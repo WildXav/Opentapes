@@ -4,8 +4,8 @@
 
 <script lang="ts">
 import { Options } from "vue-class-component";
-import MixtapeListView from "@/views/abstract/MixtapeListView.vue";
+import View from "@/views/abstract/View.vue";
 
 @Options({})
-export default class TrendingSingles extends MixtapeListView {}
+export default class TrendingSingles extends View {}
 </script>
