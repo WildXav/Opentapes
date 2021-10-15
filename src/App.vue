@@ -1,11 +1,14 @@
 <template>
   <n-config-provider class="flex flex-col h-full w-full" :theme="darkTheme">
     <n-layout has-sider>
-      <Sidenav />
+      <Sidenav :static="staticSidenav" />
 
       <n-layout
         class="inner-layout"
-        :style="{ 'padding-left': config.sidenavCollapsedWidth + 'px' }"
+        :style="{
+          'padding-left':
+            (staticSidenav ? 0 : config.sidenavCollapsedWidth) + 'px',
+        }"
       >
         <Header
           :primary-view-title="primaryViewTitle"
@@ -42,6 +45,9 @@ import Sidenav from "@/components/Sidenav.vue";
 
 @Options({
   computed: {
+    staticSidenav: (): boolean => {
+      return store.getters.breakpoints.gt.sm;
+    },
     errorDialogData: (): ErrorDialogData | null => {
       return store.getters.errorDialogData;
     },
@@ -69,6 +75,13 @@ export default class Home extends Vue {
       invoke(Command.ShowWindow);
       store.dispatch.setIsLoadingSession(true);
     });
+
+    window.addEventListener("resize", this.onResize);
+    this.onResize();
+  }
+
+  onResize(): void {
+    store.dispatch.updateBreakpoints();
   }
 }
 </script>

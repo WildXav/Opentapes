@@ -6,9 +6,11 @@ import { Song } from "@/models/song";
 import { DetailsService } from "@/services/details-service";
 import store from "@/store";
 import { Album } from "@/models/album";
+import { Breakpoints } from "@/models/breakpoints";
 
 interface CoreState {
   errorDialogData: ErrorDialogData | null;
+  breakpoints: Breakpoints;
   session: MMSession | null;
   isLoadingSession: boolean;
   primaryViewTitle: string | null;
@@ -20,6 +22,7 @@ interface CoreState {
 
 const initialState: CoreState = {
   errorDialogData: null,
+  breakpoints: new Breakpoints(),
   session: null,
   isLoadingSession: false,
   primaryViewTitle: null,
@@ -32,6 +35,9 @@ const initialState: CoreState = {
 const getters = {
   errorDialogData: (state: CoreState): ErrorDialogData | null => {
     return state.errorDialogData;
+  },
+  breakpoints: (state: CoreState): Breakpoints => {
+    return state.breakpoints;
   },
   session: (state: CoreState): MMSession | null => {
     return state.session;
@@ -58,6 +64,7 @@ const getters = {
 
 enum Mutations {
   SET_ERROR_DIALOG_DATA = "SET_ERROR_DIALOG_DATA",
+  BREAKPOINTS_UPDATE = "BREAKPOINTS_UPDATE",
   SET_SESSION = "SET_SESSION",
   SET_IS_LOADING_SESSION = "SET_IS_LOADING_SESSION",
   SET_PRIMARY_VIEW_TITLE = "SET_PRIMARY_VIEW_TITLE",
@@ -73,6 +80,10 @@ const mutations = {
     errorDialogData: ErrorDialogData | null
   ) => {
     state.errorDialogData = errorDialogData;
+  },
+
+  [Mutations.BREAKPOINTS_UPDATE]: (state: CoreState) => {
+    state.breakpoints = new Breakpoints(window.innerWidth);
   },
 
   [Mutations.SET_SESSION]: (state: CoreState, session: MMSession) => {
@@ -125,6 +136,10 @@ const actions = {
       console.error(payload.error.reason, payload.error.details);
     }
     context.commit(Mutations.SET_ERROR_DIALOG_DATA, payload);
+  },
+
+  updateBreakpoints(context: ActionContext<unknown, unknown>): void {
+    context.commit(Mutations.BREAKPOINTS_UPDATE);
   },
 
   setSession(
