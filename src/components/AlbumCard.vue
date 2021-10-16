@@ -45,9 +45,9 @@ export default class AlbumCard extends Vue {}
     color: #fff;
     width: 100%;
     padding: 5px;
-    overflow: hidden;
-    max-height: 43px;
     z-index: 1;
+    line-height: 18px;
+    font-weight: 500;
   }
 
   .overlay {
