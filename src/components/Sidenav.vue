@@ -1,6 +1,6 @@
 <template>
   <n-layout-sider
-    class="z-10"
+    class="z-20"
     :position="static ? 'static' : 'absolute'"
     collapse-mode="width"
     :collapsed-width="config.sidenavCollapsedWidth"

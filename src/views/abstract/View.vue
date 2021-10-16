@@ -4,8 +4,8 @@ import store from "@/store";
 
 export default abstract class View extends Vue {
   mounted(): void {
-    if (store.getters.primaryViewTitle !== this.$route.name) {
-      store.dispatch.setPrimaryViewTitle(this.$route.name as string);
+    if (store.getters.browsingViewTitle !== this.$route.name) {
+      store.dispatch.setBrowsingViewTitle(this.$route.name as string);
     }
   }
 }

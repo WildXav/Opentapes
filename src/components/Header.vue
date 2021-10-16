@@ -5,15 +5,24 @@
     :style="{ height: config.headerHeight + 'px' }"
   >
     <n-tabs
-      v-if="!!primaryViewTitle"
-      :class="{ disabled: !secondaryViewTitle }"
+      v-if="!!browsingViewTitle"
+      :class="{ disabled: isAlbumViewFixed || !albumViewTitle }"
+      :justify-content="isAlbumViewFixed ? 'space-between' : undefined"
+      :value="isAlbumViewActive ? 'album-view' : 'browsing-view'"
+      :key="browsingViewTitle + albumViewTitle"
       size="large"
+      ref="tabs"
     >
-      <n-tab-pane name="primary-view" :tab="primaryViewTitle" />
       <n-tab-pane
-        v-if="!!secondaryViewTitle"
-        name="secondary-view"
-        :tab="secondaryViewTitle"
+        name="browsing-view"
+        :tab="browsingViewTitle"
+        @click="toggleAlbumView(false)"
+      />
+      <n-tab-pane
+        v-if="!!albumViewTitle"
+        name="album-view"
+        :tab="albumViewTitle"
+        @click="toggleAlbumView(true)"
       />
     </n-tabs>
   </n-layout-header>
@@ -26,21 +35,19 @@ import { CONFIG } from "@/config";
 
 @Options({
   props: {
-    primaryViewTitle: String,
-    secondaryViewTitle: String,
-    isSecondaryViewActive: {
-      type: Boolean,
-      required: true,
-    },
+    browsingViewTitle: String,
+    albumViewTitle: String,
+    isAlbumViewActive: Boolean,
+    isAlbumViewFixed: Boolean,
   },
 })
 export default class Header extends Vue {
-  isSecondaryViewActive!: boolean;
+  isAlbumViewActive!: boolean;
   readonly config = CONFIG;
 
-  toggleSecondaryView(value: boolean): void {
-    if (this.isSecondaryViewActive === value) return;
-    store.dispatch.toggleSecondaryView(value);
+  toggleAlbumView(value: boolean): void {
+    if (this.isAlbumViewActive === value) return;
+    store.dispatch.toggleAlbumView(value);
   }
 }
 </script>

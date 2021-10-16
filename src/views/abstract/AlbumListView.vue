@@ -1,5 +1,8 @@
 <template>
-  <div class="flex flex-col items-center overflow-y-auto" ref="container">
+  <div
+    class="flex flex-col items-center overflow-y-auto h-full"
+    ref="container"
+  >
     <div ref="grid">
       <n-grid
         :style="{ padding: config.gridGap + 'px' }"
@@ -16,7 +19,7 @@
           v-show="loading"
           key="loader"
           class="flex justify-center items-center"
-          :style="{ 'min-height': '70px' }"
+          :style="{ 'min-height': '70px', 'min-width': '100px' }"
         >
           <n-spin size="large" />
         </n-grid-item>

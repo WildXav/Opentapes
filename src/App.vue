@@ -11,12 +11,35 @@
         }"
       >
         <Header
-          :primary-view-title="primaryViewTitle"
-          :secondary-view-title="secondaryViewTitle"
-          :is-secondary-view-active="isSecondaryViewActive"
+          :browsing-view-title="browsingViewTitle"
+          :album-view-title="albumViewTitle"
+          :is-album-view-active="isAlbumViewActive"
+          :is-album-view-fixed="isAlbumViewFixed"
         />
 
-        <router-view />
+        <n-layout
+          has-sider
+          sider-placement="right"
+          :content-style="{ 'justify-content': 'space-between' }"
+        >
+          <n-layout :style="{ position: 'static' }">
+            <div
+              style="overflow: hidden; height: 100%"
+              :style="{ position: isAlbumViewFixed ? 'static' : 'absolute' }"
+            >
+              <router-view />
+            </div>
+          </n-layout>
+
+          <n-layout-sider
+            class="z-10"
+            :collapsed-width="0"
+            :width="isAlbumViewFixed ? '40%' : '100%'"
+            :collapsed="
+              !selectedAlbum || (!isAlbumViewFixed && !isAlbumViewActive)
+            "
+          />
+        </n-layout>
       </n-layout>
     </n-layout>
 
@@ -40,10 +63,14 @@ import SessionDialog from "@/components/SessionDialog.vue";
 import Header from "@/components/Header.vue";
 import Player from "@/components/Player.vue";
 import Sidenav from "@/components/Sidenav.vue";
+import { Album } from "@/models/album";
 
 @Options({
   computed: {
     staticSidenav: (): boolean => {
+      return store.getters.breakpoints.gt.md;
+    },
+    isAlbumViewFixed: (): boolean => {
       return store.getters.breakpoints.gt.md;
     },
     errorDialogData: (): ErrorDialogData | null => {
@@ -52,14 +79,17 @@ import Sidenav from "@/components/Sidenav.vue";
     isLoadingSession: (): boolean => {
       return store.getters.isLoadingSession;
     },
-    primaryViewTitle: (): string | null => {
-      return store.getters.primaryViewTitle;
+    browsingViewTitle: (): string | null => {
+      return store.getters.browsingViewTitle;
     },
-    secondaryViewTitle: (): string | null => {
-      return store.getters.secondaryViewTitle;
+    albumViewTitle: (): string | null => {
+      return store.getters.albumViewTitle;
     },
-    isSecondaryViewActive: (): boolean => {
-      return store.getters.isSecondaryViewActive;
+    isAlbumViewActive: (): boolean => {
+      return store.getters.isAlbumViewActive;
+    },
+    selectedAlbum: (): Album | null => {
+      return store.getters.selectedAlbum;
     },
   },
   components: { Sidenav, Player, Header, SessionDialog, ErrorDialog },

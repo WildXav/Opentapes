@@ -13,9 +13,9 @@ interface CoreState {
   breakpoints: Breakpoints;
   session: MMSession | null;
   isLoadingSession: boolean;
-  primaryViewTitle: string | null;
-  secondaryViewTitle: string | null;
-  isSecondaryViewActive: boolean;
+  browsingViewTitle: string | null;
+  albumViewTitle: string | null;
+  isAlbumViewActive: boolean;
   selectedAlbum: Album | null;
   selectedAlbumSongs: Array<Song> | null;
 }
@@ -25,9 +25,9 @@ const initialState: CoreState = {
   breakpoints: new Breakpoints(),
   session: null,
   isLoadingSession: false,
-  primaryViewTitle: null,
-  secondaryViewTitle: null,
-  isSecondaryViewActive: false,
+  browsingViewTitle: null,
+  albumViewTitle: null,
+  isAlbumViewActive: false,
   selectedAlbum: null,
   selectedAlbumSongs: null,
 };
@@ -45,14 +45,14 @@ const getters = {
   isLoadingSession: (state: CoreState): boolean => {
     return state.isLoadingSession;
   },
-  primaryViewTitle: (state: CoreState): string | null => {
-    return state.primaryViewTitle;
+  browsingViewTitle: (state: CoreState): string | null => {
+    return state.browsingViewTitle;
   },
-  secondaryViewTitle: (state: CoreState): string | null => {
-    return state.secondaryViewTitle;
+  albumViewTitle: (state: CoreState): string | null => {
+    return state.albumViewTitle;
   },
-  isSecondaryViewActive: (state: CoreState): boolean => {
-    return state.isSecondaryViewActive;
+  isAlbumViewActive: (state: CoreState): boolean => {
+    return state.isAlbumViewActive;
   },
   selectedAlbum: (state: CoreState): Album | null => {
     return state.selectedAlbum;
@@ -67,9 +67,9 @@ enum Mutations {
   BREAKPOINTS_UPDATE = "BREAKPOINTS_UPDATE",
   SET_SESSION = "SET_SESSION",
   SET_IS_LOADING_SESSION = "SET_IS_LOADING_SESSION",
-  SET_PRIMARY_VIEW_TITLE = "SET_PRIMARY_VIEW_TITLE",
-  SET_SECONDARY_VIEW_TITLE = "SET_SECONDARY_VIEW_TITLE",
-  SET_IS_SECONDARY_VIEW_ACTIVE = "SET_IS_SECONDARY_VIEW_ACTIVE",
+  SET_BROWSING_VIEW_TITLE = "SET_BROWSING_VIEW_TITLE",
+  SET_ALBUM_VIEW_TITLE = "SET_ALBUM_VIEW_TITLE",
+  SET_IS_ALBUM_VIEW_ACTIVE = "SET_IS_ALBUM_VIEW_ACTIVE",
   SELECT_ALBUM = "SELECT_ALBUM",
   FETCH_ALBUM_SONGS = "FETCH_ALBUM_SONGS",
 }
@@ -98,28 +98,28 @@ const mutations = {
     state.isLoadingSession = isLoading;
   },
 
-  [Mutations.SET_PRIMARY_VIEW_TITLE]: (state: CoreState, title: string) => {
-    state.primaryViewTitle = title;
+  [Mutations.SET_BROWSING_VIEW_TITLE]: (state: CoreState, title: string) => {
+    state.browsingViewTitle = title;
   },
 
-  [Mutations.SET_SECONDARY_VIEW_TITLE]: (state: CoreState, title: string) => {
-    state.secondaryViewTitle = title;
+  [Mutations.SET_ALBUM_VIEW_TITLE]: (state: CoreState, title: string) => {
+    state.albumViewTitle = title;
   },
 
-  [Mutations.SET_IS_SECONDARY_VIEW_ACTIVE]: (
+  [Mutations.SET_IS_ALBUM_VIEW_ACTIVE]: (
     state: CoreState,
-    isSecondaryViewActive: boolean
+    isAlbumViewActive: boolean
   ) => {
-    state.isSecondaryViewActive = isSecondaryViewActive;
+    state.isAlbumViewActive = isAlbumViewActive;
   },
 
   [Mutations.SELECT_ALBUM]: (state: CoreState, album: Album) => {
     if (!state.selectedAlbum || state.selectedAlbum.id !== album.id) {
       state.selectedAlbumSongs = null;
       state.selectedAlbum = album;
-      state.secondaryViewTitle = album.name;
+      state.albumViewTitle = album.name;
     }
-    state.isSecondaryViewActive = true;
+    state.isAlbumViewActive = true;
   },
 
   [Mutations.FETCH_ALBUM_SONGS]: (state: CoreState, songs: Array<Song>) => {
@@ -156,25 +156,25 @@ const actions = {
     context.commit(Mutations.SET_IS_LOADING_SESSION, payload);
   },
 
-  setPrimaryViewTitle(
+  setBrowsingViewTitle(
     context: ActionContext<unknown, unknown>,
     payload: string
   ): void {
-    context.commit(Mutations.SET_PRIMARY_VIEW_TITLE, payload);
+    context.commit(Mutations.SET_BROWSING_VIEW_TITLE, payload);
   },
 
-  setSecondaryViewTitle(
+  setAlbumViewTitle(
     context: ActionContext<unknown, unknown>,
     payload: string
   ): void {
-    context.commit(Mutations.SET_SECONDARY_VIEW_TITLE, payload);
+    context.commit(Mutations.SET_ALBUM_VIEW_TITLE, payload);
   },
 
-  toggleSecondaryView(
+  toggleAlbumView(
     context: ActionContext<unknown, unknown>,
     payload: boolean
   ): void {
-    context.commit(Mutations.SET_IS_SECONDARY_VIEW_ACTIVE, payload);
+    context.commit(Mutations.SET_IS_ALBUM_VIEW_ACTIVE, payload);
   },
 
   selectAlbum(context: ActionContext<unknown, unknown>, payload: Album): void {
