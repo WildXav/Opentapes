@@ -5,7 +5,7 @@
 
       <n-layout
         class="inner-layout"
-        :style="{
+        :content-style="{
           'padding-left':
             (staticSidenav ? 0 : config.sidenavCollapsedWidth) + 'px',
         }"
@@ -16,9 +16,7 @@
           :is-secondary-view-active="isSecondaryViewActive"
         />
 
-        <n-layout>
-          <router-view />
-        </n-layout>
+        <router-view />
       </n-layout>
     </n-layout>
 
@@ -46,7 +44,7 @@ import Sidenav from "@/components/Sidenav.vue";
 @Options({
   computed: {
     staticSidenav: (): boolean => {
-      return store.getters.breakpoints.gt.sm;
+      return store.getters.breakpoints.gt.md;
     },
     errorDialogData: (): ErrorDialogData | null => {
       return store.getters.errorDialogData;
@@ -78,6 +76,10 @@ export default class Home extends Vue {
 
     window.addEventListener("resize", this.onResize);
     this.onResize();
+  }
+
+  unmounted(): void {
+    window.removeEventListener("resize", this.onResize);
   }
 
   onResize(): void {

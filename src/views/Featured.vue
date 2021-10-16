@@ -24,6 +24,8 @@ import AlbumCard from "@/components/AlbumCard.vue";
   },
 })
 export default class Featured extends AlbumListView {
+  infiniteScrollEnabled = false;
+
   fetchFn(payload: MMSession): Promise<void> {
     return store.dispatch.fetchFeatured(payload);
   }
