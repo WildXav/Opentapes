@@ -5,10 +5,12 @@ import store from "./store";
 import {
   create,
   NButton,
+  NButtonGroup,
   NCard,
   NConfigProvider,
   NGrid,
   NGridItem,
+  NIcon,
   NLayout,
   NLayoutFooter,
   NLayoutHeader,
@@ -40,10 +42,12 @@ const naive = create({
     NModal,
     NResult,
     NButton,
+    NButtonGroup,
     NSpin,
     NCard,
     NGrid,
     NGridItem,
+    NIcon,
   ],
 });
 

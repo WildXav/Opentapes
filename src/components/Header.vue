@@ -47,7 +47,7 @@ export default class Header extends Vue {
 
   toggleAlbumView(value: boolean): void {
     if (this.isAlbumViewActive === value) return;
-    store.dispatch.toggleAlbumView(value);
+    store.dispatch.setIsAlbumViewActive(value);
   }
 }
 </script>

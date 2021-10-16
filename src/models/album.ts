@@ -14,6 +14,7 @@ export class Album {
   readonly thumbnailCoverUrl: string | null;
   readonly smallCoverUrl: string | null;
   readonly mediumCoverUrl: string | null;
+  readonly largeCoverUrl: string | null;
 
   constructor(json: Record<string, unknown>) {
     this.id = json.id as number;
@@ -31,6 +32,7 @@ export class Album {
     );
     this.smallCoverUrl = Album.retrieveCoverUrl(this.images, ImageSize.Small);
     this.mediumCoverUrl = Album.retrieveCoverUrl(this.images, ImageSize.Medium);
+    this.largeCoverUrl = Album.retrieveCoverUrl(this.images, ImageSize.Large);
   }
 
   private static retrieveCoverUrl(

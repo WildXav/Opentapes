@@ -19,7 +19,7 @@
           v-show="loading"
           key="loader"
           class="flex justify-center items-center"
-          :style="{ 'min-height': '70px', 'min-width': '100px' }"
+          style="min-height: 70px; min-width: 100px"
         >
           <n-spin size="large" />
         </n-grid-item>

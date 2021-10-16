@@ -20,9 +20,9 @@
         <n-layout
           has-sider
           sider-placement="right"
-          :content-style="{ 'justify-content': 'space-between' }"
+          content-style="justify-content: space-between"
         >
-          <n-layout :style="{ position: 'static' }">
+          <n-layout style="position: static">
             <div
               style="overflow: hidden; height: 100%"
               :style="{ position: isAlbumViewFixed ? 'static' : 'absolute' }"
@@ -38,7 +38,9 @@
             :collapsed="
               !selectedAlbum || (!isAlbumViewFixed && !isAlbumViewActive)
             "
-          />
+          >
+            <AlbumDetails v-if="!!selectedAlbum" :album="selectedAlbum" />
+          </n-layout-sider>
         </n-layout>
       </n-layout>
     </n-layout>
@@ -64,6 +66,7 @@ import Header from "@/components/Header.vue";
 import Player from "@/components/Player.vue";
 import Sidenav from "@/components/Sidenav.vue";
 import { Album } from "@/models/album";
+import AlbumDetails from "@/views/AlbumDetails.vue";
 
 @Options({
   computed: {
@@ -92,7 +95,14 @@ import { Album } from "@/models/album";
       return store.getters.selectedAlbum;
     },
   },
-  components: { Sidenav, Player, Header, SessionDialog, ErrorDialog },
+  components: {
+    AlbumDetails,
+    Sidenav,
+    Player,
+    Header,
+    SessionDialog,
+    ErrorDialog,
+  },
 })
 export default class Home extends Vue {
   readonly darkTheme = darkTheme;

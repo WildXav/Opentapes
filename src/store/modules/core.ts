@@ -170,7 +170,7 @@ const actions = {
     context.commit(Mutations.SET_ALBUM_VIEW_TITLE, payload);
   },
 
-  toggleAlbumView(
+  setIsAlbumViewActive(
     context: ActionContext<unknown, unknown>,
     payload: boolean
   ): void {
