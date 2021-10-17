@@ -5,7 +5,7 @@
       :style="{ 'background-image': 'url(\'' + album.largeCoverUrl + '\')' }"
     />
     <n-button-group class="py-px" size="medium">
-      <n-button @click="playAlbum" round>
+      <n-button @click="playAlbum(false)" round>
         <template #icon>
           <n-icon><play-outline /></n-icon>
         </template>
@@ -16,7 +16,7 @@
           <n-icon><ellipsis-vertical-outline /></n-icon>
         </template>
       </n-button>
-      <n-button round>
+      <n-button @click="playAlbum(true)" round>
         <template #icon>
           <n-icon><shuffle-outline /></n-icon>
         </template>
@@ -97,17 +97,22 @@ export default class MixtapeDetails extends Vue {
     }
   }
 
-  playAlbum(): void {
+  playAlbum(shuffle: boolean): void {
     if (!this.session || !this.songs) return;
     store.dispatch.setPlaylist({
       session: this.session,
       playlist: this.songs,
+      shuffle,
     });
   }
 
   playSong(song: Song): void {
     if (!this.session) return;
-    store.dispatch.setPlaylist({ session: this.session, playlist: [song] });
+    store.dispatch.setPlaylist({
+      session: this.session,
+      playlist: [song],
+      shuffle: false,
+    });
   }
 }
 </script>

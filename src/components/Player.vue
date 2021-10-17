@@ -5,7 +5,7 @@
     :style="{ height: config.footerHeight + 'px' }"
   >
     IsPlaying: {{ isPlaying }} Paused: {{ audio.paused }} Ended:
-    {{ audio.ended }}
+    {{ audio.ended }} Shuffle: {{ shuffle }}
   </n-layout-footer>
 </template>
 
@@ -42,18 +42,15 @@ import { CONFIG } from "@/config";
       type: Boolean,
       required: true,
     },
+    shuffle: {
+      type: Boolean,
+      required: true,
+    },
   },
   watch: {
-    queue(newQueue, oldQueue) {
-      if (newQueue[0] !== oldQueue[0]) {
-        this.currentSongIndex = 0;
-        this.play();
-      } else {
-        this.resetPlayback();
-        if (!this.isPlaying) {
-          store.dispatch.setIsPlaying(true);
-        }
-      }
+    queue() {
+      this.playedIndexes = [];
+      this.play();
     },
     isPlaying(isPlaying) {
       const audioPlaying = !this.audio.paused && !this.audio.ended;
@@ -72,16 +69,16 @@ export default class Player extends Vue {
   private queue!: ReadonlyArray<number>;
   private isPlaying!: boolean;
   private isLoadingPlaylist!: boolean;
+  private shuffle!: boolean;
   private audio = new Audio();
   private isBuffering = false;
-  private currentSongIndex = 0;
+  private playedIndexes: Array<number> = [];
 
   mounted(): void {
     this.audio.addEventListener("waiting", () => (this.isBuffering = true));
     this.audio.addEventListener("playing", () => (this.isBuffering = false));
     this.audio.addEventListener("ended", () => {
-      if (this.currentSongIndex < this.queue.length - 1) {
-        this.currentSongIndex++;
+      if (this.playedIndexes.length < this.queue.length) {
         this.play();
       } else {
         store.dispatch.setIsPlaying(false);
@@ -90,15 +87,23 @@ export default class Player extends Vue {
   }
 
   play(): void {
-    const songId = this.queue[this.currentSongIndex];
+    const nextSongIndex = this.pickNextSongIndex() as number;
+    const songId = this.queue[nextSongIndex];
     this.audio.src = this.songsLocation
       .filter((e) => e.songId === songId)
       .map((e) => e.url)[0];
 
     const song = this.playlist.find((e) => e.id === songId) || null;
+    this.playedIndexes.push(nextSongIndex);
     store.dispatch.setSongPlaying(song);
 
     this.isPlaying ? this.resume() : store.dispatch.setIsPlaying(true);
+  }
+
+  pickNextSongIndex(): number | null {
+    return this.playedIndexes.length === 0
+      ? 0
+      : this.playedIndexes[this.playedIndexes.length - 1] + 1;
   }
 
   resume(): void {

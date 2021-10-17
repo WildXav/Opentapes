@@ -52,6 +52,7 @@
       :song-playing="songPlaying"
       :is-playing="isPlaying"
       :is-loading-playlist="isLoadingPlaylist"
+      :shuffle="shuffle"
     />
 
     <SessionDialog :is-loading-session="isLoadingSession" />
@@ -120,6 +121,9 @@ import { SongLocation } from "@/models/song-location";
     },
     isLoadingPlaylist: (): boolean => {
       return store.getters.isLoadingPlaylist;
+    },
+    shuffle: (): boolean => {
+      return store.getters.shuffle;
     },
   },
   components: {
