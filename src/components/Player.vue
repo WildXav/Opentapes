@@ -1,11 +1,67 @@
 <template>
   <n-layout-footer
     bordered
-    class="p-5"
+    class="flex p-2"
     :style="{ height: config.footerHeight + 'px' }"
   >
-    IsPlaying: {{ isPlaying }} Paused: {{ audio.paused }} Ended:
-    {{ audio.ended }} Shuffle: {{ shuffle }}
+    <div class="flex items-center h-full flex-auto overflow-hidden">
+      <n-spin v-if="!isReady()" size="small" class="ml-2" />
+      <template v-else-if="songPlaying">
+        <img
+          class="h-full mr-1.5 rounded"
+          :src="songPlaying.thumbnailCoverUrl"
+          alt="cover"
+        />
+
+        <div class="flex flex-col flex-auto overflow-hidden">
+          <h4 class="nowrap-ellipsis font-semibold">
+            {{ songPlaying.name }}
+          </h4>
+          <div class="nowrap-ellipsis">
+            <span class="text-sm">{{ songPlaying.mainArtists }}</span>
+            <span v-if="songPlaying.featureArtists" class="text-xs">
+              (feat. {{ songPlaying.featureArtists }})
+            </span>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <div class="flex flex-none h-full gap-x-2.5">
+      <n-button
+        text
+        class="text-2xl"
+        :disabled="!isReady() || !songPlaying"
+        @click="resetPlayback"
+      >
+        <n-icon>
+          <play-skip-back-outline />
+        </n-icon>
+      </n-button>
+
+      <n-button
+        text
+        class="text-2xl"
+        :disabled="!isReady() || !songPlaying"
+        @click="togglePlayback"
+      >
+        <n-icon>
+          <pause-outline v-if="isReady() && isPlaying" />
+          <play-outline v-else />
+        </n-icon>
+      </n-button>
+
+      <n-button
+        text
+        class="text-2xl"
+        :disabled="!isReady() || !songPlaying || !hasNext()"
+        @click="playNext"
+      >
+        <n-icon>
+          <play-skip-forward-outline />
+        </n-icon>
+      </n-button>
+    </div>
   </n-layout-footer>
 </template>
 
@@ -15,8 +71,20 @@ import { Options, Vue } from "vue-class-component";
 import { SongLocation } from "@/models/song-location";
 import { Song } from "@/models/song";
 import { CONFIG } from "@/config";
+import {
+  PauseOutline,
+  PlayOutline,
+  PlaySkipBackOutline,
+  PlaySkipForwardOutline,
+} from "@vicons/ionicons5";
 
 @Options({
+  components: {
+    PauseOutline,
+    PlayOutline,
+    PlaySkipBackOutline,
+    PlaySkipForwardOutline,
+  },
   props: {
     playlist: {
       type: Array,
@@ -50,7 +118,7 @@ import { CONFIG } from "@/config";
   watch: {
     queue() {
       this.playedIndexes = [];
-      this.play();
+      this.playNext();
     },
     isPlaying(isPlaying) {
       const audioPlaying = !this.audio.paused && !this.audio.ended;
@@ -79,14 +147,14 @@ export default class Player extends Vue {
     this.audio.addEventListener("playing", () => (this.isBuffering = false));
     this.audio.addEventListener("ended", () => {
       if (this.playedIndexes.length < this.queue.length) {
-        this.play();
+        this.playNext();
       } else {
         store.dispatch.setIsPlaying(false);
       }
     });
   }
 
-  play(): void {
+  playNext(): void {
     const nextSongIndex = this.pickNextSongIndex() as number;
     const songId = this.queue[nextSongIndex];
     this.audio.src = this.songsLocation
@@ -127,6 +195,10 @@ export default class Player extends Vue {
 
   isAudioPlaying(): boolean {
     return !this.audio.paused && !this.audio.ended;
+  }
+
+  hasNext(): boolean {
+    return this.playedIndexes.length < this.queue.length;
   }
 
   togglePlayback(): void {

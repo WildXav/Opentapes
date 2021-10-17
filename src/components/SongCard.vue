@@ -1,17 +1,19 @@
 <template>
   <n-card class="rounded-none cursor-pointer" size="small">
-    <div class="flex flex-row">
+    <div class="flex">
       <div class="flex flex-col flex-auto overflow-hidden">
         <h3
-          class="font-semibold flex flex-row items-center"
+          class="font-semibold flex items-center"
           :class="{ playing: isPlaying }"
         >
           <n-icon class="mr-1">
             <headset-outline />
           </n-icon>
-          {{ song.name }}
+          <span class="flex-auto nowrap-ellipsis">
+            {{ song.name }}
+          </span>
         </h3>
-        <h4 class="font-medium">
+        <h4 class="font-medium nowrap-ellipsis">
           <span>{{ song.mainArtists }}</span>
           <span v-if="song.featureArtists" class="text-xs">
             (feat. {{ song.featureArtists }})
@@ -66,15 +68,6 @@ export default class SongItem extends Vue {}
   &:hover h3 {
     color: var(--color-target);
   }
-}
-
-h3,
-h4 {
-  margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
 }
 
 h3 {

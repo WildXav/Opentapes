@@ -7,7 +7,7 @@
     :closable="false"
     class="max-w-xs md:max-w-lg lg:max-w-xl"
   >
-    <div class="flex flex-row justify-center">
+    <div class="flex justify-center">
       <n-spin size="large" />
     </div>
     <template #footer />

@@ -14,3 +14,9 @@ body,
   @apply flex;
   @apply flex-col;
 }
+
+.nowrap-ellipsis {
+  @apply overflow-ellipsis;
+  @apply overflow-hidden;
+  @apply whitespace-nowrap;
+}
