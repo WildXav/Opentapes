@@ -1,8 +1,14 @@
 <template>
-  <n-card class="rounded-none" size="small">
+  <n-card class="rounded-none cursor-pointer" size="small">
     <div class="flex flex-row">
       <div class="flex flex-col flex-auto overflow-hidden">
-        <h3 class="font-semibold" :class="{ playing: isPlaying }">
+        <h3
+          class="font-semibold flex flex-row items-center"
+          :class="{ playing: isPlaying }"
+        >
+          <n-icon class="mr-1">
+            <headset-outline />
+          </n-icon>
           {{ song.name }}
         </h3>
         <h4 class="font-medium">
@@ -29,10 +35,10 @@
 import { Options, Vue } from "vue-class-component";
 import { Song } from "@/models/song";
 import Featured from "@/views/Featured.vue";
-import { EllipsisVerticalOutline } from "@vicons/ionicons5";
+import { EllipsisVerticalOutline, HeadsetOutline } from "@vicons/ionicons5";
 
 @Options({
-  components: { EllipsisVerticalOutline, Featured },
+  components: { EllipsisVerticalOutline, HeadsetOutline, Featured },
   props: {
     song: {
       type: Song,
@@ -56,6 +62,10 @@ export default class SongItem extends Vue {}
   &:first-child {
     border-top: none;
   }
+
+  &:hover h3 {
+    color: var(--color-target);
+  }
 }
 
 h3,
@@ -65,5 +75,19 @@ h4 {
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
+}
+
+h3 {
+  &.playing {
+    color: var(--color-target);
+
+    .n-icon {
+      display: block;
+    }
+  }
+
+  .n-icon {
+    display: none;
+  }
 }
 </style>

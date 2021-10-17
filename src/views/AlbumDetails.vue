@@ -5,7 +5,7 @@
       :style="{ 'background-image': 'url(\'' + album.largeCoverUrl + '\')' }"
     />
     <n-button-group class="py-px" size="medium">
-      <n-button round>
+      <n-button @click="playAlbum" round>
         <template #icon>
           <n-icon><play-outline /></n-icon>
         </template>
@@ -67,7 +67,7 @@ import SongCard from "@/components/SongCard.vue";
   computed: {
     session: (): MMSession | null => store.state.core.session,
     songs: (): ReadonlyArray<Song> | null => store.getters.selectedAlbumSongs,
-    songPlaying: (): Song | null => null /* store.getters.songPlaying */,
+    songPlaying: (): Song | null => store.getters.songPlaying,
   },
   watch: {
     session() {
@@ -97,10 +97,17 @@ export default class MixtapeDetails extends Vue {
     }
   }
 
+  playAlbum(): void {
+    if (!this.session || !this.songs) return;
+    store.dispatch.setPlaylist({
+      session: this.session,
+      playlist: this.songs,
+    });
+  }
+
   playSong(song: Song): void {
-    if (this.session) {
-      // store.dispatch.setPlaylist({ session: this.session, playlist: [song] });
-    }
+    if (!this.session) return;
+    store.dispatch.setPlaylist({ session: this.session, playlist: [song] });
   }
 }
 </script>

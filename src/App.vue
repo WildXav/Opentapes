@@ -45,7 +45,14 @@
       </n-layout>
     </n-layout>
 
-    <Player />
+    <Player
+      :playlist="playlist"
+      :songs-location="songsLocation"
+      :queue="queue"
+      :song-playing="songPlaying"
+      :is-playing="isPlaying"
+      :is-loading-playlist="isLoadingPlaylist"
+    />
 
     <SessionDialog :is-loading-session="isLoadingSession" />
     <ErrorDialog :dialog-data="errorDialogData" />
@@ -67,14 +74,16 @@ import Player from "@/components/Player.vue";
 import Sidenav from "@/components/Sidenav.vue";
 import { Album } from "@/models/album";
 import AlbumDetails from "@/views/AlbumDetails.vue";
+import { Song } from "@/models/song";
+import { SongLocation } from "@/models/song-location";
 
 @Options({
   computed: {
     staticSidenav: (): boolean => {
-      return store.getters.breakpoints.gt.md;
+      return store.getters.breakpoints.gt.sm;
     },
     isAlbumViewFixed: (): boolean => {
-      return store.getters.breakpoints.gt.md;
+      return store.getters.breakpoints.gt.sm;
     },
     errorDialogData: (): ErrorDialogData | null => {
       return store.getters.errorDialogData;
@@ -93,6 +102,24 @@ import AlbumDetails from "@/views/AlbumDetails.vue";
     },
     selectedAlbum: (): Album | null => {
       return store.getters.selectedAlbum;
+    },
+    playlist: (): ReadonlyArray<Song> => {
+      return store.getters.playlist;
+    },
+    songsLocation: (): ReadonlyArray<SongLocation> => {
+      return store.getters.songsLocation;
+    },
+    queue: (): ReadonlyArray<number> => {
+      return store.getters.queue;
+    },
+    songPlaying: (): Song | null => {
+      return store.getters.songPlaying;
+    },
+    isPlaying: (): boolean => {
+      return store.getters.isPlaying;
+    },
+    isLoadingPlaylist: (): boolean => {
+      return store.getters.isLoadingPlaylist;
     },
   },
   components: {

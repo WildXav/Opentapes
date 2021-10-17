@@ -22,7 +22,7 @@ fn main() {
                         .resizable(true)
                         .decorations(true)
                         .fullscreen(false)
-                        .inner_size(360.0, 720.0)
+                        .inner_size(1024.0, 768.0)
                         .min_inner_size(320.0, 320.0)
                         .visible(false);
                     (win_attrs, webview_attrs)
