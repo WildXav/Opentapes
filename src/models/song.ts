@@ -31,9 +31,9 @@ export class Song {
     }
   }
 
-  private static formatDuration(duration: number): string {
+  public static formatDuration(duration: number): string {
     const minutes = Math.floor(duration / 60);
-    const seconds = duration - minutes * 60;
+    const seconds = Math.trunc(duration - minutes * 60);
     return `${Song.formatNumber(minutes)}:${Song.formatNumber(seconds)}`;
   }
 

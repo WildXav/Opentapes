@@ -52,7 +52,7 @@
       :song-playing="songPlaying"
       :is-playing="isPlaying"
       :is-loading-playlist="isLoadingPlaylist"
-      :shuffle="shuffle"
+      :large="largePlayer"
     />
 
     <SessionDialog :is-loading-session="isLoadingSession" />
@@ -85,6 +85,9 @@ import { SongLocation } from "@/models/song-location";
     },
     isAlbumViewFixed: (): boolean => {
       return store.getters.breakpoints.gt.sm;
+    },
+    largePlayer: (): boolean => {
+      return store.getters.breakpoints.gt.xs;
     },
     errorDialogData: (): ErrorDialogData | null => {
       return store.getters.errorDialogData;
@@ -121,9 +124,6 @@ import { SongLocation } from "@/models/song-location";
     },
     isLoadingPlaylist: (): boolean => {
       return store.getters.isLoadingPlaylist;
-    },
-    shuffle: (): boolean => {
-      return store.getters.shuffle;
     },
   },
   components: {

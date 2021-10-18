@@ -18,6 +18,7 @@ import {
   NMenu,
   NModal,
   NResult,
+  NSlider,
   NSpace,
   NSpin,
   NSwitch,
@@ -48,6 +49,7 @@ const naive = create({
     NGrid,
     NGridItem,
     NIcon,
+    NSlider,
   ],
 });
 

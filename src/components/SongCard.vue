@@ -1,7 +1,7 @@
 <template>
   <n-card class="rounded-none cursor-pointer" size="small">
     <div class="flex">
-      <div class="flex flex-col flex-auto overflow-hidden">
+      <div class="flex flex-col flex-auto overflow-hidden pr-2">
         <h3
           class="font-semibold flex items-center"
           :class="{ playing: isPlaying }"
@@ -24,9 +24,7 @@
       <div class="flex row items-center">
         {{ song.formattedDuration }}
         <n-button class="ml-2" size="large" text>
-          <template #icon>
-            <n-icon><ellipsis-vertical-outline /></n-icon>
-          </template>
+          <n-icon><ellipsis-vertical-outline /></n-icon>
         </n-button>
       </div>
     </div>
