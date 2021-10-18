@@ -1,94 +1,64 @@
 <template>
-  <el-menu
-    :default-active="$route.path"
-    id="navMenu"
-    class="el-menu-vertical-demo"
-    :collapse="true"
-    router
+  <n-layout-sider
+    class="z-20"
+    :position="static ? 'static' : 'absolute'"
+    collapse-mode="width"
+    :collapsed-width="config.sidenavCollapsedWidth"
+    :width="config.sidenavWidth"
+    :collapsed="collapsed"
+    :show-trigger="!static"
+    bordered
+    @collapse="collapsed = true"
+    @expand="collapsed = false"
   >
-    <template v-for="item in routes" :key="item.name">
-      <el-submenu v-if="'routes' in item" :index="item.id">
-        <template #title>
-          <svg-icon :name="item.iconName"></svg-icon>
-          <span>{{ item.name }}</span>
-        </template>
+    <n-space vertical justify="space-between" class="h-full">
+      <n-menu
+        :collapsed="collapsed"
+        :collapsed-width="config.sidenavCollapsedWidth"
+        :collapsed-icon-size="config.sidenavIconSize"
+        :options="mainMenuOptions"
+        :default-expand-all="static"
+        :value="$route.meta['key']"
+      />
 
-        <el-menu-item
-          v-for="child in item.routes"
-          :key="child.name"
-          :index="child.path"
-        >
-          {{ child.name }}
-        </el-menu-item>
-      </el-submenu>
-
-      <el-menu-item v-else :index="item.alias || item.path">
-        <svg-icon :name="item.iconName"></svg-icon>
-        <template #title>{{ item.name }}</template>
-      </el-menu-item>
-    </template>
-  </el-menu>
+      <n-menu
+        :collapsed="collapsed"
+        :collapsed-width="config.sidenavCollapsedWidth"
+        :collapsed-icon-size="config.sidenavIconSize"
+        :options="secondaryMenuOptions"
+        value=""
+      />
+    </n-space>
+  </n-layout-sider>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import SvgIcon from "@/components/SvgIcon.vue";
-import { ROUTES } from "@/router/routes";
+import { CONFIG } from "@/config";
+import { ROUTES, routesToMenuOption } from "@/router/routes";
+import { renderIcon } from "@/helpers/render-helper";
+import { SettingsOutline } from "@vicons/ionicons5";
 
 @Options({
-  components: {
-    SvgIcon,
+  props: {
+    static: Boolean,
+  },
+  watch: {
+    static() {
+      this.collapsed = !this.static;
+    },
   },
 })
 export default class Sidenav extends Vue {
-  routes = ROUTES;
-
-  mounted(): void {
-    // remove menu poppers
-    document
-      .querySelectorAll(".el-menu-item > div")
-      .forEach((itemPopper: Element) => {
-        const popperId = itemPopper.getAttribute("aria-describedby");
-        if (popperId) document.getElementById(popperId)?.remove();
-      });
-  }
+  readonly config = CONFIG;
+  readonly mainMenuOptions = ROUTES.map((route) => routesToMenuOption(route));
+  readonly secondaryMenuOptions = [
+    {
+      label: "Settings",
+      key: "settings",
+      icon: renderIcon(SettingsOutline),
+    },
+  ];
+  collapsed = true;
 }
 </script>
-
-<style lang="scss">
-#navMenu {
-  overflow-y: auto;
-
-  &.el-menu--collapse {
-    width: 54px;
-    min-width: 54px;
-    max-width: 54px;
-
-    > .el-menu-item,
-    > .el-submenu {
-      height: 60px;
-      text-align: center;
-
-      > div {
-        display: flex !important;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-  }
-
-  .el-menu-item > div,
-  .el-submenu__title {
-    padding: 0 !important;
-  }
-
-  .el-submenu.is-active .el-submenu__title {
-    color: var(--el-color-primary);
-  }
-
-  .svg-icon {
-    width: 18px;
-    height: 18px;
-  }
-}
-</style>

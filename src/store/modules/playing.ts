@@ -4,6 +4,7 @@ import { SongLocation } from "@/models/song-location";
 import { ActionContext } from "vuex";
 import { MMSession } from "@/models/backend/mm-session";
 import { DetailsService } from "@/services/details-service";
+import { shuffleQueue } from "@/helpers/playing-helper";
 
 interface PlayingState {
   playlist: Array<Song>;
@@ -12,6 +13,7 @@ interface PlayingState {
   songPlaying: Song | null;
   isPlaying: boolean;
   isLoadingPlaylist: boolean;
+  shuffle: boolean;
 }
 
 const initialState: PlayingState = {
@@ -21,6 +23,7 @@ const initialState: PlayingState = {
   songPlaying: null,
   isPlaying: false,
   isLoadingPlaylist: false,
+  shuffle: false,
 };
 
 const getters = {
@@ -42,6 +45,9 @@ const getters = {
   isLoadingPlaylist: (state: PlayingState): boolean => {
     return state.isLoadingPlaylist;
   },
+  shuffle: (state: PlayingState): boolean => {
+    return state.shuffle;
+  },
 };
 
 enum Mutations {
@@ -56,9 +62,11 @@ const mutations = {
     state: PlayingState,
     payload: SetPlaylistSuccessPayload
   ) => {
+    const queue = payload.playlist.map((song) => song.id);
+    state.queue = payload.shuffle ? shuffleQueue(queue) : queue;
     state.playlist = payload.playlist;
     state.songsLocation = payload.songsLocation;
-    state.queue = payload.playlist.map((song) => song.id);
+    state.shuffle = payload.shuffle;
     state.isLoadingPlaylist = false;
   },
   [Mutations.SET_SONG_PLAYING]: (
@@ -97,6 +105,7 @@ const actions = {
       context.commit(Mutations.SET_PLAYLIST, {
         playlist: payload.playlist,
         songsLocation,
+        shuffle: payload.shuffle,
       });
     });
   },
@@ -117,11 +126,13 @@ const actions = {
 export interface SetPlaylistPayload {
   session: MMSession;
   playlist: Array<Song>;
+  shuffle: boolean;
 }
 
 export interface SetPlaylistSuccessPayload {
   playlist: Array<Song>;
   songsLocation: Array<SongLocation>;
+  shuffle: boolean;
 }
 
 export default defineModule({

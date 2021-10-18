@@ -1,27 +1,31 @@
 <script lang="ts">
-import store from "@/store";
 import { Options } from "vue-class-component";
+import AlbumListView from "@/views/abstract/AlbumListView.vue";
 import { MMSession } from "@/models/backend/mm-session";
-import MixtapeCard from "@/components/MixtapeCard.vue";
-import { Mixtape } from "@/models/mixtape";
-import MixtapeListView from "@/views/MixtapeListView.vue";
+import store from "@/store";
+import { Album } from "@/models/album";
+import AlbumCard from "@/components/AlbumCard.vue";
 
 @Options({
   computed: {
-    session: (): MMSession | null => store.state.core.session,
-    mixtapes: (): Array<Mixtape> => store.state.browsing.latest,
+    session: (): MMSession | null => store.getters.session,
+    albums: (): ReadonlyArray<Album> => store.getters.latest,
   },
   watch: {
     session() {
-      this.fetchMixtapes();
+      this.fetchAlbums();
+    },
+    albums() {
+      this.loading = false;
     },
   },
   components: {
-    MixtapeCard,
+    AlbumCard,
   },
 })
-export default class Latest extends MixtapeListView {
-  useInfiniteScroll = true;
-  fetchFn = store.dispatch.fetchLatest;
+export default class Latest extends AlbumListView {
+  fetchFn(payload: MMSession): Promise<void> {
+    return store.dispatch.fetchLatest(payload);
+  }
 }
 </script>

@@ -1,35 +1,37 @@
 <template>
-  <el-dialog
+  <n-modal
+    :show="isLoadingSession"
+    preset="card"
     title="Requesting new session"
-    v-model="isDialogVisible"
-    width="400px"
-    :show-close="false"
-    :close-on-press-escape="false"
-    :close-on-click-modal="false"
+    :mask-closable="false"
+    :closable="false"
+    class="max-w-xs md:max-w-lg lg:max-w-xl"
   >
-    <div v-loading="true" class="loader"></div>
-
-    <template #footer>
-      <span class="dialog-footer"></span>
-    </template>
-  </el-dialog>
+    <div class="flex justify-center">
+      <n-spin size="large" />
+    </div>
+    <template #footer />
+  </n-modal>
 </template>
 
 <script lang="ts">
 import store from "@/store";
+import { invoke } from "@tauri-apps/api";
 import { Options, Vue } from "vue-class-component";
-import { Command } from "@/models/backend/command";
-import { MMSession } from "@/models/backend/mm-session";
 import { Error } from "@/models/backend/error";
 import { ErrorDialogData } from "@/models/error-dialog-data";
-import { invoke } from "@tauri-apps/api";
+import { MMSession } from "@/models/backend/mm-session";
+import { Command } from "@/models/backend/command";
 
 @Options({
   props: {
-    sessionLoading: Boolean,
+    isLoadingSession: {
+      type: Boolean,
+      required: true,
+    },
   },
   watch: {
-    sessionLoading(isLoading: boolean) {
+    isLoadingSession(isLoading: boolean) {
       if (isLoading) {
         this.isDialogVisible = true;
         this.requestNewSession();
@@ -56,9 +58,3 @@ export default class SessionDialog extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.loader {
-  margin: auto;
-}
-</style>

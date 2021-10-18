@@ -1,12 +1,12 @@
 import { MMSession } from "@/models/backend/mm-session";
 import { Command, execCmd } from "@/models/backend/command";
 import { Song } from "@/models/song";
-import { Mixtape } from "@/models/mixtape";
+import { Album } from "@/models/album";
 
 export abstract class DetailsService {
   static fetchSongs(
     session: MMSession,
-    album: Mixtape,
+    album: Album,
     retryCb?: () => unknown
   ): Promise<Array<Song>> {
     const args = {

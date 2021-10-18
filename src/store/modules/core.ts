@@ -1,23 +1,23 @@
 import { ActionContext } from "vuex";
 import { defineModule } from "direct-vuex";
-import { Breakpoints } from "@/models/breakpoints";
 import { MMSession } from "@/models/backend/mm-session";
 import { ErrorDialogData } from "@/models/error-dialog-data";
-import { Mixtape } from "@/models/mixtape";
 import { Song } from "@/models/song";
 import { DetailsService } from "@/services/details-service";
 import store from "@/store";
+import { Album } from "@/models/album";
+import { Breakpoints } from "@/models/breakpoints";
 
 interface CoreState {
   errorDialogData: ErrorDialogData | null;
   breakpoints: Breakpoints;
   session: MMSession | null;
   isLoadingSession: boolean;
-  primaryViewTitle: string | null;
-  secondaryViewTitle: string | null;
-  showSecondaryView: boolean;
-  selectedTape: Mixtape | null;
-  selectedTapeSongs: Array<Song> | null;
+  browsingViewTitle: string | null;
+  albumViewTitle: string | null;
+  isAlbumViewActive: boolean;
+  selectedAlbum: Album | null;
+  selectedAlbumSongs: Array<Song> | null;
 }
 
 const initialState: CoreState = {
@@ -25,11 +25,11 @@ const initialState: CoreState = {
   breakpoints: new Breakpoints(),
   session: null,
   isLoadingSession: false,
-  primaryViewTitle: null,
-  secondaryViewTitle: null,
-  showSecondaryView: false,
-  selectedTape: null,
-  selectedTapeSongs: null,
+  browsingViewTitle: null,
+  albumViewTitle: null,
+  isAlbumViewActive: false,
+  selectedAlbum: null,
+  selectedAlbumSongs: null,
 };
 
 const getters = {
@@ -45,20 +45,20 @@ const getters = {
   isLoadingSession: (state: CoreState): boolean => {
     return state.isLoadingSession;
   },
-  primaryViewTitle: (state: CoreState): string | null => {
-    return state.primaryViewTitle;
+  browsingViewTitle: (state: CoreState): string | null => {
+    return state.browsingViewTitle;
   },
-  secondaryViewTitle: (state: CoreState): string | null => {
-    return state.secondaryViewTitle;
+  albumViewTitle: (state: CoreState): string | null => {
+    return state.albumViewTitle;
   },
-  showSecondaryView: (state: CoreState): boolean => {
-    return state.showSecondaryView;
+  isAlbumViewActive: (state: CoreState): boolean => {
+    return state.isAlbumViewActive;
   },
-  selectedTape: (state: CoreState): Mixtape | null => {
-    return state.selectedTape;
+  selectedAlbum: (state: CoreState): Album | null => {
+    return state.selectedAlbum;
   },
-  selectedTapeSongs: (state: CoreState): Array<Song> | null => {
-    return state.selectedTapeSongs;
+  selectedAlbumSongs: (state: CoreState): Array<Song> | null => {
+    return state.selectedAlbumSongs;
   },
 };
 
@@ -67,11 +67,11 @@ enum Mutations {
   BREAKPOINTS_UPDATE = "BREAKPOINTS_UPDATE",
   SET_SESSION = "SET_SESSION",
   SET_IS_LOADING_SESSION = "SET_IS_LOADING_SESSION",
-  SET_PRIMARY_VIEW_TITLE = "SET_PRIMARY_VIEW_TITLE",
-  SET_SECONDARY_VIEW_TITLE = "SET_SECONDARY_VIEW_TITLE",
-  SET_SHOW_SECONDARY_VIEW = "SET_SHOW_SECONDARY_VIEW",
-  SELECT_TAPE = "SELECT_TAPE",
-  FETCH_TAPE_SONGS = "FETCH_TAPE_SONGS",
+  SET_BROWSING_VIEW_TITLE = "SET_BROWSING_VIEW_TITLE",
+  SET_ALBUM_VIEW_TITLE = "SET_ALBUM_VIEW_TITLE",
+  SET_IS_ALBUM_VIEW_ACTIVE = "SET_IS_ALBUM_VIEW_ACTIVE",
+  SELECT_ALBUM = "SELECT_ALBUM",
+  FETCH_ALBUM_SONGS = "FETCH_ALBUM_SONGS",
 }
 
 const mutations = {
@@ -98,32 +98,32 @@ const mutations = {
     state.isLoadingSession = isLoading;
   },
 
-  [Mutations.SET_PRIMARY_VIEW_TITLE]: (state: CoreState, title: string) => {
-    state.primaryViewTitle = title;
+  [Mutations.SET_BROWSING_VIEW_TITLE]: (state: CoreState, title: string) => {
+    state.browsingViewTitle = title;
   },
 
-  [Mutations.SET_SECONDARY_VIEW_TITLE]: (state: CoreState, title: string) => {
-    state.secondaryViewTitle = title;
+  [Mutations.SET_ALBUM_VIEW_TITLE]: (state: CoreState, title: string) => {
+    state.albumViewTitle = title;
   },
 
-  [Mutations.SET_SHOW_SECONDARY_VIEW]: (
+  [Mutations.SET_IS_ALBUM_VIEW_ACTIVE]: (
     state: CoreState,
-    showView: boolean
+    isAlbumViewActive: boolean
   ) => {
-    state.showSecondaryView = showView;
+    state.isAlbumViewActive = isAlbumViewActive;
   },
 
-  [Mutations.SELECT_TAPE]: (state: CoreState, tape: Mixtape) => {
-    if (!state.selectedTape || state.selectedTape.id !== tape.id) {
-      state.selectedTapeSongs = null;
-      state.selectedTape = tape;
-      state.secondaryViewTitle = tape.name;
+  [Mutations.SELECT_ALBUM]: (state: CoreState, album: Album) => {
+    if (!state.selectedAlbum || state.selectedAlbum.id !== album.id) {
+      state.selectedAlbumSongs = null;
+      state.selectedAlbum = album;
+      state.albumViewTitle = album.name;
     }
-    state.showSecondaryView = true;
+    state.isAlbumViewActive = true;
   },
 
-  [Mutations.FETCH_TAPE_SONGS]: (state: CoreState, songs: Array<Song>) => {
-    state.selectedTapeSongs = songs;
+  [Mutations.FETCH_ALBUM_SONGS]: (state: CoreState, songs: Array<Song>) => {
+    state.selectedAlbumSongs = songs;
   },
 };
 
@@ -156,37 +156,37 @@ const actions = {
     context.commit(Mutations.SET_IS_LOADING_SESSION, payload);
   },
 
-  setPrimaryViewTitle(
+  setBrowsingViewTitle(
     context: ActionContext<unknown, unknown>,
     payload: string
   ): void {
-    context.commit(Mutations.SET_PRIMARY_VIEW_TITLE, payload);
+    context.commit(Mutations.SET_BROWSING_VIEW_TITLE, payload);
   },
 
-  setSecondaryViewTitle(
+  setAlbumViewTitle(
     context: ActionContext<unknown, unknown>,
     payload: string
   ): void {
-    context.commit(Mutations.SET_SECONDARY_VIEW_TITLE, payload);
+    context.commit(Mutations.SET_ALBUM_VIEW_TITLE, payload);
   },
 
-  toggleSecondaryView(
+  setIsAlbumViewActive(
     context: ActionContext<unknown, unknown>,
     payload: boolean
   ): void {
-    context.commit(Mutations.SET_SHOW_SECONDARY_VIEW, payload);
+    context.commit(Mutations.SET_IS_ALBUM_VIEW_ACTIVE, payload);
   },
 
-  selectTape(context: ActionContext<unknown, unknown>, payload: Mixtape): void {
-    context.commit(Mutations.SELECT_TAPE, payload);
+  selectAlbum(context: ActionContext<unknown, unknown>, payload: Album): void {
+    context.commit(Mutations.SELECT_ALBUM, payload);
   },
 
-  async fetchTapeSongs(
+  async fetchAlbumSongs(
     context: ActionContext<CoreState, unknown>,
     session: MMSession
   ): Promise<void> {
-    const tape = context.state.selectedTape;
-    if (!tape) {
+    const album = context.state.selectedAlbum;
+    if (!album) {
       await store.dispatch.setErrorDialogData(
         new ErrorDialogData(
           {
@@ -199,10 +199,10 @@ const actions = {
       return;
     }
 
-    const songs = await DetailsService.fetchSongs(session, tape, () =>
-      store.dispatch.fetchTapeSongs(session)
+    const songs = await DetailsService.fetchSongs(session, album, () =>
+      store.dispatch.fetchAlbumSongs(session)
     );
-    context.commit(Mutations.FETCH_TAPE_SONGS, songs);
+    context.commit(Mutations.FETCH_ALBUM_SONGS, songs);
   },
 };
 

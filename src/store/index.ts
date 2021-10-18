@@ -4,7 +4,7 @@ import core from "@/store/modules/core";
 import browsing from "@/store/modules/browsing";
 import playing from "@/store/modules/playing";
 
-const debug = process.env.NODE_ENV !== "production";
+const debug = process.env.NODE_END !== "production";
 
 const { store, rootActionContext, moduleActionContext } = createDirectStore({
   modules: {

@@ -1,8 +1,8 @@
 import { invoke } from "@tauri-apps/api";
 import { InvokeArgs } from "@tauri-apps/api/tauri";
-import { Error } from "@/models/backend/error";
 import store from "@/store";
 import { ErrorDialogData } from "@/models/error-dialog-data";
+import { Error } from "@/models/backend/error";
 
 export enum Command {
   ShowWindow = "show_window",

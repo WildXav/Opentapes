@@ -1,44 +1,134 @@
 <template>
-  <div class="container">
-    <div class="song-details-wrapper">
-      <div v-if="!isReady()" v-loading="true"></div>
-      <template v-else-if="songPlaying">
-        <img :src="songPlaying.thumbnailCoverUrl" alt="cover" />
+  <n-layout-footer
+    bordered
+    class="flex p-2"
+    :class="{ large: large }"
+    :style="{ height: config.footerHeight + 'px' }"
+  >
+    <div class="song-info flex flex-auto items-center relative overflow-hidden">
+      <n-spin v-show="!isReady()" size="small" class="absolute ml-2" />
+      <div
+        v-if="!!songPlaying"
+        class="flex items-center h-full w-full overflow-hidden"
+        :style="{ opacity: isReady() ? 100 : 0 }"
+      >
+        <img
+          class="h-full mr-1.5 rounded"
+          :src="songPlaying.thumbnailCoverUrl"
+          alt="cover"
+        />
 
-        <div class="song-details select">
-          <h4 class="title">{{ songPlaying.name }}</h4>
-          <div class="artists">
-            <span>{{ songPlaying.mainArtists }}</span>
-            <span v-if="songPlaying.featureArtists" class="features">
+        <div class="flex flex-col flex-auto overflow-hidden pr-2">
+          <h4 class="nowrap-ellipsis font-semibold">
+            {{ songPlaying.name }}
+          </h4>
+          <div class="nowrap-ellipsis">
+            <span class="text-sm">{{ songPlaying.mainArtists }}</span>
+            <span v-show="!!songPlaying.featureArtists" class="text-xs">
               (feat. {{ songPlaying.featureArtists }})
             </span>
           </div>
         </div>
-      </template>
+      </div>
     </div>
 
-    <div class="controls">
-      <PlayerControlBtn icon-name="step-backward" @click="resetPlayback()" />
-      <PlayerControlBtn
-        :icon-name="isReady() && isPlaying ? 'pause' : 'play'"
+    <div
+      v-show="large"
+      class="flex flex-auto justify-center items-center mx-3 gap-x-2"
+    >
+      <div class="progress-time">{{ playbackPositionStr }}</div>
+      <n-slider
+        :value="playbackPosition"
+        :max="songDuration || 1"
+        :tooltip="false"
         :disabled="!isReady() || !songPlaying"
-        @clicked="togglePlayback()"
+        :on-update:value="onSlideUpdate"
+        class="flex flex-auto"
       />
-      <PlayerControlBtn icon-name="step-forward" />
+      <div class="progress-time">{{ songDurationStr }}</div>
     </div>
-  </div>
+
+    <div class="flex flex-none h-full gap-x-3">
+      <n-button
+        text
+        v-show="playbackPosition < 5"
+        :disabled="!isReady() || !songPlaying || !hasPrevious()"
+        @click="skipBack"
+      >
+        <n-icon><play-skip-back-outline /></n-icon>
+      </n-button>
+      <n-button
+        text
+        v-show="playbackPosition >= 5"
+        :disabled="!isReady() || !songPlaying"
+        @click="setPlaybackPosition(0)"
+      >
+        <n-icon><play-back-outline /></n-icon>
+      </n-button>
+
+      <n-button
+        text
+        :disabled="!isReady() || !songPlaying"
+        @click="togglePlayback"
+      >
+        <n-icon>
+          <pause-outline v-show="isReady() && isPlaying" />
+          <play-outline v-show="!isReady() || !isPlaying" />
+        </n-icon>
+      </n-button>
+
+      <n-button
+        text
+        :disabled="!isReady() || !songPlaying || !hasNext()"
+        @click="playNext"
+      >
+        <n-icon><play-skip-forward-outline /></n-icon>
+      </n-button>
+
+      <n-button text :disabled="!isReady() || !songPlaying">
+        <n-icon><ellipsis-vertical-outline /></n-icon>
+      </n-button>
+    </div>
+  </n-layout-footer>
 </template>
+
+<style lang="scss" scoped>
+.large .song-info {
+  flex: 0 1 auto;
+  min-width: 8rem;
+  max-width: 20%;
+}
+.n-button {
+  @apply text-2xl;
+}
+.progress-time {
+  flex: 0 1 2.75rem;
+}
+</style>
 
 <script lang="ts">
 import store from "@/store";
 import { Options, Vue } from "vue-class-component";
 import { SongLocation } from "@/models/song-location";
 import { Song } from "@/models/song";
-import PlayerControlBtn from "@/components/PlayerControlBtn.vue";
+import { CONFIG } from "@/config";
+import {
+  EllipsisVerticalOutline,
+  PauseOutline,
+  PlayOutline,
+  PlayBackOutline,
+  PlaySkipBackOutline,
+  PlaySkipForwardOutline,
+} from "@vicons/ionicons5";
 
 @Options({
   components: {
-    PlayerControlBtn,
+    EllipsisVerticalOutline,
+    PauseOutline,
+    PlayOutline,
+    PlayBackOutline,
+    PlaySkipBackOutline,
+    PlaySkipForwardOutline,
   },
   props: {
     playlist: {
@@ -65,32 +155,28 @@ import PlayerControlBtn from "@/components/PlayerControlBtn.vue";
       type: Boolean,
       required: true,
     },
+    large: {
+      type: Boolean,
+      required: true,
+    },
   },
   watch: {
-    queue(newQueue, oldQueue) {
-      if (newQueue[0] !== oldQueue[0]) {
-        this.play();
-      } else {
-        this.resetPlayback();
-        if (!this.isPlaying) {
-          store.dispatch.setIsPlaying(true);
-        }
-      }
+    queue() {
+      this.playedIndexes = [];
+      this.playNext();
     },
-    isPlaying() {
+    isPlaying(isPlaying: boolean) {
       const audioPlaying = !this.audio.paused && !this.audio.ended;
-      if (
-        (this.isPlaying && audioPlaying) ||
-        (!this.isPlaying && !audioPlaying)
-      ) {
+      if ((isPlaying && audioPlaying) || (!isPlaying && !audioPlaying)) {
         return;
       }
 
-      this.isPlaying ? this.resume() : this.pause();
+      isPlaying ? this.resume() : this.pause();
     },
   },
 })
 export default class Player extends Vue {
+  readonly config = CONFIG;
   private playlist!: ReadonlyArray<Song>;
   private songsLocation!: ReadonlyArray<SongLocation>;
   private queue!: ReadonlyArray<number>;
@@ -98,27 +184,63 @@ export default class Player extends Vue {
   private isLoadingPlaylist!: boolean;
   private audio = new Audio();
   private isBuffering = false;
+  private playedIndexes: Array<number> = [];
+  private playbackPosition = 0;
+  private playbackPositionStr = "";
+  private songDuration = 0;
+  private songDurationStr = "";
+  private percentagePlayed = 0;
 
-  play(): void {
-    const songId = this.queue[0];
-    const songUrl = this.songsLocation
-      .filter((e) => e.songId === songId)
-      .map((e) => e.url)[0];
-    this.audio = new Audio(songUrl);
+  mounted(): void {
+    this.resetProgress();
+
     this.audio.addEventListener("waiting", () => (this.isBuffering = true));
     this.audio.addEventListener("playing", () => (this.isBuffering = false));
-    this.audio.addEventListener("ended", () =>
-      store.dispatch.setIsPlaying(false)
-    );
+    this.audio.addEventListener("ended", () => {
+      if (this.playedIndexes.length < this.queue.length) {
+        this.playNext();
+      } else {
+        store.dispatch.setIsPlaying(false);
+      }
+    });
+    this.audio.addEventListener("timeupdate", () => {
+      const currentTime = this.audio.currentTime;
+      this.percentagePlayed = (currentTime * 100) / this.audio.duration;
+      this.playbackPosition = this.audio.currentTime;
+      this.playbackPositionStr = Song.formatDuration(currentTime);
+    });
+  }
+
+  playNext(): void {
+    this.resetProgress();
+    const nextSongIndex = this.pickNextSongIndex() as number;
+    const songId = this.queue[nextSongIndex];
+    this.audio.src = this.songsLocation
+      .filter((e) => e.songId === songId)
+      .map((e) => e.url)[0];
 
     const song = this.playlist.find((e) => e.id === songId) || null;
+    this.songDuration = song ? song.duration : 0;
+    this.songDurationStr = song ? song.formattedDuration : "";
+    this.playedIndexes.push(nextSongIndex);
     store.dispatch.setSongPlaying(song);
-    store.dispatch.setIsPlaying(true);
+
+    this.isPlaying ? this.resume() : store.dispatch.setIsPlaying(true);
+  }
+
+  onSlideUpdate(value: number): void {
+    this.setPlaybackPosition(value);
+  }
+
+  pickNextSongIndex(): number | null {
+    return this.playedIndexes.length === 0
+      ? 0
+      : this.playedIndexes[this.playedIndexes.length - 1] + 1;
   }
 
   resume(): void {
     if (this.audio.ended) {
-      this.resetPlayback();
+      this.setPlaybackPosition(0);
     }
     this.audio.play();
   }
@@ -127,8 +249,21 @@ export default class Player extends Vue {
     this.audio.pause();
   }
 
-  resetPlayback(): void {
-    this.audio.currentTime = 0;
+  setPlaybackPosition(position: number): void {
+    this.audio.currentTime = position;
+  }
+
+  skipBack(): void {
+    this.playedIndexes = this.playedIndexes.slice(0, -2);
+    this.playNext();
+  }
+
+  resetProgress(): void {
+    this.playbackPosition = 0;
+    this.playbackPositionStr = Song.formatDuration(0);
+    this.songDuration = 0;
+    this.songDurationStr = Song.formatDuration(0);
+    this.percentagePlayed = 0;
   }
 
   isReady(): boolean {
@@ -139,73 +274,16 @@ export default class Player extends Vue {
     return !this.audio.paused && !this.audio.ended;
   }
 
+  hasPrevious(): boolean {
+    return this.playedIndexes.length > 1;
+  }
+
+  hasNext(): boolean {
+    return this.playedIndexes.length < this.queue.length;
+  }
+
   togglePlayback(): void {
     store.dispatch.setIsPlaying(!this.isPlaying);
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.container {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  padding: 10px;
-}
-
-.song-details-wrapper {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  flex: 1 1 auto;
-  overflow: hidden;
-
-  img {
-    height: 100%;
-    margin-right: 5px;
-    border-radius: 3px;
-  }
-}
-
-.song-details {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  overflow: hidden;
-
-  .title,
-  .artists {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin: 0;
-  }
-
-  .artists {
-    font-size: var(--el-font-size-base);
-
-    .features {
-      font-size: var(--el-font-size-small);
-    }
-  }
-}
-
-.controls {
-  display: flex;
-  flex: 0 0 auto;
-  height: 100%;
-
-  .control-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 5px;
-    width: 40px;
-    height: 40px;
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-}
-</style>

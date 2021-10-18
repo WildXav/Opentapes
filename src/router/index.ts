@@ -1,12 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import { ROUTES, RouteGroup } from "@/router/routes";
+import { ROUTES, routesToRouteRecord } from "@/router/routes";
 
 const routes: Array<RouteRecordRaw> = ROUTES.map((route) => {
-  if ("routes" in route) {
-    return (route as RouteGroup).routes;
-  }
-
-  return route as RouteRecordRaw;
+  return routesToRouteRecord(route);
 }).flat();
 
 const router = createRouter({

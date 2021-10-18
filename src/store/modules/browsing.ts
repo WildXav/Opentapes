@@ -1,42 +1,42 @@
 import store from "@/store";
 import { defineModule } from "direct-vuex";
-import { Mixtape } from "@/models/mixtape";
+import { Album } from "@/models/album";
 import { ActionContext } from "vuex";
 import { BrowsingService } from "@/services/browsing-service";
 import { MMSession } from "@/models/backend/mm-session";
 import { CONFIG } from "@/config";
 
 interface BrowsingState {
-  featured: Array<Mixtape>;
-  latest: Array<Mixtape>;
-  latestPage: number;
-  trendingTapes: Array<Mixtape>;
-  trendingTapesPage: number;
-  greatestTapes: Array<Mixtape>;
-  greatestTapesPage: number;
+  featured: Array<Album>;
+  latest: Array<Album>;
+  latestPageIndex: number;
+  trendingTapes: Array<Album>;
+  trendingTapesPageIndex: number;
+  greatestTapes: Array<Album>;
+  greatestTapesPageIndex: number;
 }
 
 const initialState: BrowsingState = {
   featured: [],
   latest: [],
-  latestPage: 0,
+  latestPageIndex: 0,
   trendingTapes: [],
-  trendingTapesPage: 0,
+  trendingTapesPageIndex: 0,
   greatestTapes: [],
-  greatestTapesPage: 0,
+  greatestTapesPageIndex: 0,
 };
 
 const getters = {
-  featured: (state: BrowsingState): Array<Mixtape> => {
+  featured: (state: BrowsingState): Array<Album> => {
     return state.featured;
   },
-  latest: (state: BrowsingState): Array<Mixtape> => {
+  latest: (state: BrowsingState): Array<Album> => {
     return state.latest;
   },
-  trendingTapes: (state: BrowsingState): Array<Mixtape> => {
+  trendingTapes: (state: BrowsingState): Array<Album> => {
     return state.trendingTapes;
   },
-  greatestTapes: (state: BrowsingState): Array<Mixtape> => {
+  greatestTapes: (state: BrowsingState): Array<Album> => {
     return state.greatestTapes;
   },
 };
@@ -51,30 +51,30 @@ enum Mutations {
 const mutations = {
   [Mutations.FETCH_FEATURED]: (
     state: BrowsingState,
-    featured: Array<Mixtape>
+    featured: Array<Album>
   ) => {
     state.featured = featured;
   },
 
-  [Mutations.FETCH_LATEST]: (state: BrowsingState, latest: Array<Mixtape>) => {
+  [Mutations.FETCH_LATEST]: (state: BrowsingState, latest: Array<Album>) => {
     state.latest.push(...latest);
-    state.latestPage++;
+    state.latestPageIndex++;
   },
 
   [Mutations.FETCH_TRENDING_TAPES]: (
     state: BrowsingState,
-    trendingTapes: Array<Mixtape>
+    trendingTapes: Array<Album>
   ) => {
     state.trendingTapes.push(...trendingTapes);
-    state.trendingTapesPage++;
+    state.trendingTapesPageIndex++;
   },
 
   [Mutations.FETCH_GREATEST_TAPES]: (
     state: BrowsingState,
-    greatestTapes: Array<Mixtape>
+    greatestTapes: Array<Album>
   ) => {
     state.greatestTapes.push(...greatestTapes);
-    state.greatestTapesPage++;
+    state.greatestTapesPageIndex++;
   },
 };
 
@@ -95,7 +95,7 @@ const actions = {
   ): Promise<void> {
     const latest = await BrowsingService.fetchLatest(
       session,
-      context.state.latestPage + 1,
+      context.state.latestPageIndex + 1,
       CONFIG.fetchingSize,
       () => store.dispatch.fetchLatest(session)
     );
@@ -108,7 +108,7 @@ const actions = {
   ): Promise<void> {
     const trending = await BrowsingService.fetchTrendingTapes(
       session,
-      context.state.trendingTapesPage + 1,
+      context.state.trendingTapesPageIndex + 1,
       CONFIG.fetchingSize,
       () => store.dispatch.fetchTrendingTapes(session)
     );
@@ -121,7 +121,7 @@ const actions = {
   ): Promise<void> {
     const greatest = await BrowsingService.fetchGreatestTapes(
       session,
-      context.state.greatestTapesPage + 1,
+      context.state.greatestTapesPageIndex + 1,
       CONFIG.fetchingSize,
       () => store.dispatch.fetchGreatestTapes(session)
     );

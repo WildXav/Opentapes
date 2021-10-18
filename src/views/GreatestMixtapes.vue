@@ -1,15 +1,15 @@
 <script lang="ts">
 import { Options } from "vue-class-component";
 import AlbumListView from "@/views/abstract/AlbumListView.vue";
-import store from "@/store";
 import { MMSession } from "@/models/backend/mm-session";
+import store from "@/store";
 import { Album } from "@/models/album";
 import AlbumCard from "@/components/AlbumCard.vue";
 
 @Options({
   computed: {
     session: (): MMSession | null => store.getters.session,
-    albums: (): ReadonlyArray<Album> => store.getters.featured,
+    albums: (): ReadonlyArray<Album> => store.getters.greatestTapes,
   },
   watch: {
     session() {
@@ -23,11 +23,9 @@ import AlbumCard from "@/components/AlbumCard.vue";
     AlbumCard,
   },
 })
-export default class Featured extends AlbumListView {
-  infiniteScrollEnabled = false;
-
+export default class GreatestMixtapes extends AlbumListView {
   fetchFn(payload: MMSession): Promise<void> {
-    return store.dispatch.fetchFeatured(payload);
+    return store.dispatch.fetchGreatestTapes(payload);
   }
 }
 </script>

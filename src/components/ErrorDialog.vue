@@ -1,30 +1,26 @@
 <template>
-  <el-dialog
-    v-model="isDialogVisible"
-    width="400px"
-    custom-class="error-dialog"
-    :show-close="!!isDialogVisible && !!dialogData && dialogData.showClose"
-    :close-on-press-escape="false"
-    :close-on-click-modal="false"
+  <n-modal
+    :show="!!dialogData"
+    preset="card"
+    :mask-closable="false"
+    :closable="dialogData?.showClose"
+    @close="close"
+    class="max-w-xs md:max-w-lg lg:max-w-xl"
   >
-    <el-result
-      v-if="!!dialogData"
-      icon="error"
-      :title="dialogData.error.reason"
-      :subTitle="dialogData.error.details"
+    <n-result
+      status="error"
+      :title="dialogData?.error.reason"
+      :description="dialogData?.error.details"
+      class="select-text"
+      size="small"
     >
-      <template #extra>
-        <el-button
-          v-if="!!dialogData.retryCallback"
-          @click="retry"
-          type="primary"
-          size="medium"
-        >
+      <template v-if="!!dialogData?.retryCallback" #footer>
+        <n-button class="select-none" @click="retry" type="primary">
           Retry
-        </el-button>
+        </n-button>
       </template>
-    </el-result>
-  </el-dialog>
+    </n-result>
+  </n-modal>
 </template>
 
 <script lang="ts">
@@ -36,29 +32,18 @@ import { ErrorDialogData } from "@/models/error-dialog-data";
   props: {
     dialogData: ErrorDialogData,
   },
-  watch: {
-    dialogData(dialogData: ErrorDialogData | null) {
-      this.isDialogVisible = !!dialogData;
-    },
-  },
 })
 export default class ErrorDialog extends Vue {
-  isDialogVisible = false;
   dialogData!: ErrorDialogData | null;
 
   retry(): void {
     if (!this.dialogData || !this.dialogData.retryCallback) return;
+    this.close();
+    setTimeout(this.dialogData.retryCallback, 100);
+  }
+
+  close(): void {
     store.dispatch.setErrorDialogData(null);
-    this.dialogData.retryCallback();
   }
 }
 </script>
-
-<style lang="scss">
-.error-dialog {
-  .el-dialog__header,
-  .el-dialog__body {
-    padding: 0;
-  }
-}
-</style>
