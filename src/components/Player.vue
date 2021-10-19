@@ -3,7 +3,10 @@
     bordered
     class="flex p-2"
     :class="{ large: large }"
-    :style="{ height: config.footerHeight + 'px' }"
+    :style="{
+      height: config.footerHeight + 'px',
+      'min-height': config.footerHeight + 'px',
+    }"
   >
     <div class="song-info flex flex-auto items-center relative overflow-hidden">
       <n-spin v-show="!isReady()" size="small" class="absolute ml-2" />
