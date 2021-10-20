@@ -3,6 +3,7 @@ all(not(debug_assertions), target_os = "windows"),
 windows_subsystem = "windows"
 )]
 
+use std::env;
 use tauri::{WindowBuilder, WindowUrl};
 
 mod commands;
@@ -13,6 +14,11 @@ mod mm_session;
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
+            let hide_decoration = match env::var("XDG_CURRENT_DESKTOP") {
+                Ok(val) => val.to_lowercase().contains("phosh"),
+                Err(_) => false,
+            };
+
             app.create_window(
                 String::from("main"),
                 WindowUrl::default(),
@@ -24,6 +30,7 @@ fn main() {
                         .fullscreen(false)
                         .inner_size(1024.0, 768.0)
                         .min_inner_size(320.0, 320.0)
+                        .decorations(!hide_decoration)
                         .visible(false);
                     (win_attrs, webview_attrs)
                 }).unwrap();
