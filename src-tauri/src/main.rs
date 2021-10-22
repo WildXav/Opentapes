@@ -4,6 +4,7 @@ windows_subsystem = "windows"
 )]
 
 use std::env;
+use std::env::VarError;
 use tauri::{WindowBuilder, WindowUrl};
 
 mod commands;
@@ -14,10 +15,10 @@ mod mm_session;
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
-            let hide_decoration = match env::var("XDG_CURRENT_DESKTOP") {
-                Ok(val) => val.to_lowercase().contains("phosh"),
-                Err(_) => false,
-            };
+            let xdg_current_desktop = env::var("XDG_CURRENT_DESKTOP");
+            let desktop_session = env::var("DESKTOP_SESSION");
+            let hide_decoration = check_var_for_mobile_env_name(xdg_current_desktop)
+                                        || check_var_for_mobile_env_name(desktop_session);
 
             app.create_window(
                 String::from("main"),
@@ -48,4 +49,14 @@ fn main() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+fn check_var_for_mobile_env_name(var: Result<String, VarError>) -> bool {
+    match var {
+        Ok(value) => {
+            let lower_value = value.to_lowercase();
+            lower_value.contains("phosh") || lower_value.contains("plasma-mobile")
+        },
+        Err(_) => false,
+    }
 }

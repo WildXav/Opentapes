@@ -74,7 +74,7 @@ pub(crate) async fn fetch_song_location(session: MMSession, song_id: u32) -> Res
         .get(LOCATION)
         .map(|value| value.to_str().unwrap_or(""))
         .map(|value| value.replace("/low", "/original"))
-        .unwrap_or(String::new());
+        .unwrap_or_default();
 
     if !response.status().is_redirection() || location.is_empty() {
         return Err(Error::new(
