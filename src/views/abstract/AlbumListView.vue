@@ -16,7 +16,7 @@
         </n-grid-item>
 
         <n-grid-item
-          v-show="loading"
+          v-show="albums.length === 0 || loading"
           key="loader"
           class="flex justify-center items-center"
           style="min-height: 70px; min-width: 100px"
@@ -52,14 +52,12 @@ export default abstract class AlbumListView extends View {
   mounted(): void {
     super.mounted();
     this.$refs.container.addEventListener("scroll", this.handleScroll);
-
-    if (this.albums.length === 0) {
-      this.fetchAlbums();
-    }
+    this.fetchAlbums();
   }
 
   unmounted(): void {
     window.removeEventListener("scroll", this.handleScroll);
+    store.dispatch.resetBrowsingState();
   }
 
   handleScroll(): void {

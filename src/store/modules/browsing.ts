@@ -46,6 +46,7 @@ enum Mutations {
   FETCH_LATEST = "FETCH_LATEST",
   FETCH_TRENDING_TAPES = "FETCH_TRENDING_TAPES",
   FETCH_GREATEST_TAPES = "FETCH_GREATEST_TAPES",
+  RESET = "RESET",
 }
 
 const mutations = {
@@ -75,6 +76,16 @@ const mutations = {
   ) => {
     state.greatestTapes.push(...greatestTapes);
     state.greatestTapesPageIndex++;
+  },
+
+  [Mutations.RESET]: (state: BrowsingState) => {
+    state.featured = [];
+    state.latest = [];
+    state.latestPageIndex = 0;
+    state.trendingTapes = [];
+    state.trendingTapesPageIndex = 0;
+    state.greatestTapes = [];
+    state.greatestTapesPageIndex = 0;
   },
 };
 
@@ -126,6 +137,10 @@ const actions = {
       () => store.dispatch.fetchGreatestTapes(session)
     );
     context.commit(Mutations.FETCH_GREATEST_TAPES, greatest);
+  },
+
+  resetBrowsingState(context: ActionContext<BrowsingState, unknown>): void {
+    context.commit(Mutations.RESET);
   },
 };
 
