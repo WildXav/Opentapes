@@ -11,7 +11,7 @@
         </template>
         Play
       </n-button>
-      <n-button>
+      <n-button v-if="false">
         <template #icon>
           <n-icon><ellipsis-vertical-outline /></n-icon>
         </template>

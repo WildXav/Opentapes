@@ -23,7 +23,8 @@
 
       <div class="flex row items-center">
         {{ song.formattedDuration }}
-        <n-button class="ml-2" size="large" text>
+
+        <n-button v-if="false" class="ml-2" size="large" text>
           <n-icon><ellipsis-vertical-outline /></n-icon>
         </n-button>
       </div>

@@ -88,7 +88,7 @@
         <n-icon><play-skip-forward-outline /></n-icon>
       </n-button>
 
-      <n-button text :disabled="!isReady() || !songPlaying">
+      <n-button v-if="false" :disabled="!isReady() || !songPlaying" text>
         <n-icon><ellipsis-vertical-outline /></n-icon>
       </n-button>
     </div>

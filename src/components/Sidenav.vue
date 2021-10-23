@@ -22,6 +22,7 @@
       />
 
       <n-menu
+        v-if="false"
         :collapsed="collapsed"
         :collapsed-width="config.sidenavCollapsedWidth"
         :collapsed-icon-size="config.sidenavIconSize"
