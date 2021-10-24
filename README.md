@@ -27,6 +27,6 @@ yarn install
 yarn build && cd src-tauri && cargo tauri build
 ```
 
-### Contributing
+## Contributing
 
 Bug reports, pull request submission, and idea suggestions are welcomed.
