@@ -38,7 +38,7 @@ Note: This project uses Yarn 1.x as Node.js package manager. Will migrate to 2.x
 yarn install
 ```
 
-### Build for production
+### Building for production
 ```
 yarn build && cd src-tauri && cargo tauri build
 ```
