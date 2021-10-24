@@ -1,4 +1,4 @@
-<img src="https://codeberg.org/xaviers/Opentapes/raw/commit/f05c1a58eec84d2a32c56b19a5a967cb5ab1adee/src/assets/logo.png" align="right" width="50px" height="50px"/>
+<img src="https://codeberg.org/xaviers/Opentapes/raw/commit/e76434c9a36b69aedab897f727c3cf92c9af6331/src/assets/logo.png" align="right" width="50px" height="50px"/>
 
 #  Opentapes
 
@@ -10,7 +10,7 @@
 </a>
 &nbsp;
 <a href="https://tauri.studio/" target="_blank">
-    <img src="https://img.shields.io/badge/Tauri-1.0.0%20beta%208-yellow">
+    <img src="https://img.shields.io/badge/Tauri-1.0.0%20beta%208-yellowgreen">
 </a>
 </p>
 
