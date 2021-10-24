@@ -25,7 +25,7 @@ fn main() {
                 WindowUrl::default(),
                 |win_attrs, webview_attrs| {
                     let win_attrs = win_attrs
-                        .title("OpenTapes")
+                        .title("Opentapes")
                         .resizable(true)
                         .decorations(true)
                         .fullscreen(false)
