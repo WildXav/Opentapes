@@ -15,7 +15,7 @@ A convergent/adaptive app for streaming Hip-Hop mixtapes. Made with Vue.js & Tau
 1. Refer to [Tauri's official documentation](https://tauri.studio/en/docs/getting-started/intro) to install Tauri, Node.js & Rust.
 2. Install tauri-cli using cargo: `cargo install tauri-cli --version 1.0.0-beta.7`.
 
-Note: This project uses Yarn 1.x as Node.js package manager.
+Note: This project uses Yarn 1.x as Node.js package manager. Will migrate to 2.x soon.
 
 ### Installing Front-End dependencies
 ```
