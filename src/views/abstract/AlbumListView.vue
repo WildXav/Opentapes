@@ -12,11 +12,15 @@
         responsive="self"
       >
         <n-grid-item v-for="album in albums" :key="album.id">
-          <AlbumCard :album="album" @click="selectAlbum(album)" />
+          <GridCard :content="album" @click="selectAlbum(album)" />
+        </n-grid-item>
+
+        <n-grid-item v-for="single in singles" :key="single.id">
+          <GridCard :content="single" @click="selectSingle(single)" />
         </n-grid-item>
 
         <n-grid-item
-          v-show="albums.length === 0 || loading"
+          v-show="loading"
           key="loader"
           class="flex justify-center items-center"
           style="min-height: 70px; min-width: 100px"
@@ -34,12 +38,15 @@ import { MMSession } from "@/models/backend/mm-session";
 import { Album } from "@/models/album";
 import store from "@/store";
 import { CONFIG } from "@/config";
+import { Single } from "@/models/single";
 
 export default abstract class AlbumListView extends View {
   readonly config = CONFIG;
   protected session!: MMSession | null;
   protected albums!: Array<Album>;
-  protected loading = false;
+  protected singles!: Array<Single>;
+  protected loading = true;
+  protected hasLoaded = false;
   protected infiniteScrollEnabled = true;
 
   abstract fetchFn(payload: MMSession): Promise<void>;
@@ -52,7 +59,7 @@ export default abstract class AlbumListView extends View {
   mounted(): void {
     super.mounted();
     this.$refs.container.addEventListener("scroll", this.handleScroll);
-    this.fetchAlbums();
+    this.fetchContent();
   }
 
   unmounted(): void {
@@ -71,19 +78,26 @@ export default abstract class AlbumListView extends View {
       this.$refs.container.getBoundingClientRect().top;
 
     if (gridBottomPosition <= bottom && !this.loading) {
-      this.fetchAlbums();
+      this.fetchContent();
     }
   }
 
-  fetchAlbums(): void {
-    if (this.session && !this.loading) {
+  fetchContent(): void {
+    if (this.session && (!this.hasLoaded || !this.loading)) {
       this.loading = true;
-      this.fetchFn(this.session).then(() => (this.loading = false));
+      this.fetchFn(this.session).then(() => {
+        this.hasLoaded = true;
+        this.loading = false;
+      });
     }
   }
 
   selectAlbum(album: Album): void {
     store.dispatch.selectAlbum(album);
+  }
+
+  selectSingle(single: Single): void {
+    store.dispatch.selectSingle(single);
   }
 }
 </script>

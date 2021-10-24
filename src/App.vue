@@ -36,10 +36,12 @@
             :collapsed-width="0"
             :width="isAlbumViewFixed ? '40%' : '100%'"
             :collapsed="
-              !selectedAlbum || (!isAlbumViewFixed && !isAlbumViewActive)
+              (!selectedAlbum && !selectedSingle) ||
+              (!isAlbumViewFixed && !isAlbumViewActive)
             "
           >
             <AlbumDetails v-if="!!selectedAlbum" :album="selectedAlbum" />
+            <SingleDetails v-if="!!selectedSingle" :single="selectedSingle" />
           </n-layout-sider>
         </n-layout>
       </n-layout>
@@ -77,6 +79,8 @@ import { Album } from "@/models/album";
 import AlbumDetails from "@/views/AlbumDetails.vue";
 import { Song } from "@/models/song";
 import { SongLocation } from "@/models/song-location";
+import { Single } from "@/models/single";
+import SingleDetails from "@/views/SingleDetails.vue";
 
 @Options({
   computed: {
@@ -107,6 +111,9 @@ import { SongLocation } from "@/models/song-location";
     selectedAlbum: (): Album | null => {
       return store.getters.selectedAlbum;
     },
+    selectedSingle: (): Single | null => {
+      return store.getters.selectedSingle;
+    },
     playlist: (): ReadonlyArray<Song> => {
       return store.getters.playlist;
     },
@@ -127,6 +134,7 @@ import { SongLocation } from "@/models/song-location";
     },
   },
   components: {
+    SingleDetails,
     AlbumDetails,
     Sidenav,
     Player,

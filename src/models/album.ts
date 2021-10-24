@@ -1,6 +1,7 @@
 import { Image, ImageSize } from "@/models/image";
 import { Artists, concatArtists } from "@/models/artist";
 import dayjs from "dayjs";
+import { getCoverUrl } from "@/helpers/album-helper";
 
 export class Album {
   readonly id: number;
@@ -26,21 +27,9 @@ export class Album {
     this.releaseDate = dayjs(json.releaseDate as string);
 
     this.mainArtists = concatArtists(this.artists.main);
-    this.thumbnailCoverUrl = Album.retrieveCoverUrl(
-      this.images,
-      ImageSize.Thumbnail
-    );
-    this.smallCoverUrl = Album.retrieveCoverUrl(this.images, ImageSize.Small);
-    this.mediumCoverUrl = Album.retrieveCoverUrl(this.images, ImageSize.Medium);
-    this.largeCoverUrl = Album.retrieveCoverUrl(this.images, ImageSize.Large);
-  }
-
-  private static retrieveCoverUrl(
-    images: Array<Image>,
-    size: ImageSize
-  ): string | null {
-    if (images.length === 0) return null;
-    const smallCovers = images.map((image: Image) => image[size]);
-    return smallCovers.length === 0 ? null : smallCovers[0];
+    this.thumbnailCoverUrl = getCoverUrl(this.images, ImageSize.Thumbnail);
+    this.smallCoverUrl = getCoverUrl(this.images, ImageSize.Small);
+    this.mediumCoverUrl = getCoverUrl(this.images, ImageSize.Medium);
+    this.largeCoverUrl = getCoverUrl(this.images, ImageSize.Large);
   }
 }

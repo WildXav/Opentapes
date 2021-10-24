@@ -2,10 +2,10 @@
   <div class="flex flex-col items-center h-full">
     <div
       class="flex-none h-1/6 w-full shadow bg-center bg-no-repeat bg-cover"
-      :style="{ 'background-image': 'url(\'' + album.largeCoverUrl + '\')' }"
+      :style="{ 'background-image': 'url(\'' + single.largeCoverUrl + '\')' }"
     />
     <n-button-group class="py-px" size="medium">
-      <n-button @click="playAlbum(false)" round>
+      <n-button @click="play()" round>
         <template #icon>
           <n-icon><play-outline /></n-icon>
         </template>
@@ -16,19 +16,12 @@
           <n-icon><ellipsis-vertical-outline /></n-icon>
         </template>
       </n-button>
-      <n-button v-if="!album.isSingle" @click="playAlbum(true)" round>
-        <template #icon>
-          <n-icon><shuffle-outline /></n-icon>
-        </template>
-        Shuffle
-      </n-button>
     </n-button-group>
 
     <n-spin v-if="loading" size="large" class="mt-3" />
-    <div v-else-if="songs" class="flex flex-col overflow-y-auto w-full">
+    <div v-else-if="song" class="flex flex-col overflow-y-auto w-full">
       <SongCard
-        v-for="song in songs"
-        @click="playSong(song)"
+        @click="play()"
         :key="song.id"
         :song="song"
         :is-playing="songPlaying?.id === song.id"
@@ -42,13 +35,13 @@ import store from "@/store";
 import { Options, Vue } from "vue-class-component";
 import { MMSession } from "@/models/backend/mm-session";
 import { Song } from "@/models/song";
-import { Album } from "@/models/album";
 import {
   EllipsisVerticalOutline,
   PlayOutline,
   ShuffleOutline,
 } from "@vicons/ionicons5";
 import SongCard from "@/components/SongCard.vue";
+import { Single } from "@/models/single";
 
 @Options({
   components: {
@@ -58,58 +51,49 @@ import SongCard from "@/components/SongCard.vue";
     ShuffleOutline,
   },
   props: {
-    album: {
-      type: Album,
+    single: {
+      type: Single,
       required: true,
     },
   },
   computed: {
     session: (): MMSession | null => store.state.core.session,
-    songs: (): ReadonlyArray<Song> | null => store.getters.selectedAlbumSongs,
+    song: (): Song | null => store.getters.selectedSingleSong,
     songPlaying: (): Song | null => store.getters.songPlaying,
   },
   watch: {
     session() {
-      this.fetchSongs();
+      this.fetchSong();
     },
-    album() {
-      this.fetchSongs();
+    single() {
+      this.fetchSong();
     },
   },
 })
-export default class AlbumDetails extends Vue {
+export default class SingleDetails extends Vue {
   private session!: MMSession | null;
-  private songs!: Array<Song> | null;
+  private song!: Song | null;
   private loading = false;
 
   mounted(): void {
-    this.fetchSongs();
+    this.fetchSong();
   }
 
-  fetchSongs(): void {
+  fetchSong(): void {
     if (this.session && !this.loading) {
       this.loading = true;
 
       store.dispatch
-        .fetchAlbumSongs(this.session)
+        .fetchSingleSong(this.session)
         .then(() => (this.loading = false));
     }
   }
 
-  playAlbum(shuffle: boolean): void {
-    if (!this.session || !this.songs) return;
+  play(): void {
+    if (!this.session || !this.song) return;
     store.dispatch.setPlaylist({
       session: this.session,
-      playlist: this.songs,
-      shuffle,
-    });
-  }
-
-  playSong(song: Song): void {
-    if (!this.session) return;
-    store.dispatch.setPlaylist({
-      session: this.session,
-      playlist: [song],
+      playlist: [this.song],
       shuffle: false,
     });
   }

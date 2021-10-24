@@ -1,5 +1,6 @@
 import { Artists, concatArtists } from "@/models/artist";
 import { Album } from "@/models/album";
+import { Single } from "@/models/single";
 
 export class Song {
   readonly id: number;
@@ -13,7 +14,7 @@ export class Song {
   readonly formattedDuration: string;
   readonly thumbnailCoverUrl: string | null;
 
-  constructor(json: Record<string, unknown>, album: Album) {
+  constructor(json: Record<string, unknown>, parent: Album | Single) {
     this.id = json.id as number;
     this.name = json.name as string;
     this.size = json.size as number;
@@ -24,7 +25,7 @@ export class Song {
     this.mainArtists = concatArtists(this.artists.main);
     this.featureArtists = null;
     this.formattedDuration = Song.formatDuration(this.duration);
-    this.thumbnailCoverUrl = album.thumbnailCoverUrl;
+    this.thumbnailCoverUrl = parent.thumbnailCoverUrl;
 
     if (this.artists.feature && this.artists.feature.length > 0) {
       this.featureArtists = concatArtists(this.artists.feature);

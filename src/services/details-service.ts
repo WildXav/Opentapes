@@ -2,9 +2,10 @@ import { MMSession } from "@/models/backend/mm-session";
 import { Command, execCmd } from "@/models/backend/command";
 import { Song } from "@/models/song";
 import { Album } from "@/models/album";
+import { Single } from "@/models/single";
 
 export abstract class DetailsService {
-  static fetchSongs(
+  static fetchAlbumSongs(
     session: MMSession,
     album: Album,
     retryCb?: () => unknown
@@ -23,6 +24,23 @@ export abstract class DetailsService {
         (songJson) => new Song(songJson, album)
       )
     );
+  }
+
+  static fetchSingleSong(
+    session: MMSession,
+    single: Single,
+    retryCb?: () => unknown
+  ): Promise<Song> {
+    const args = {
+      session,
+      singleId: single.id,
+    };
+
+    return execCmd<Record<string, unknown>>(
+      Command.FetchSingleDetails,
+      args,
+      retryCb
+    ).then((json) => new Song(json, single));
   }
 
   static fetchSongLocation(

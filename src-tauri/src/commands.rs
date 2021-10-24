@@ -3,7 +3,7 @@ use crate::mm_session::MMSession;
 use crate::error::{Error, ErrorReason};
 use serde_json::Value;
 use crate::mm_endpoints::{mm_url, fetch};
-use crate::mm_endpoints::MMEndpoint::{Features, Latest, TrendingMixtapes, GreatestMixtapes, AlbumDetails, SongDetails};
+use crate::mm_endpoints::MMEndpoint::{Features, Latest, TrendingMixtapes, GreatestMixtapes, AlbumDetails, SingleDetails, TrendingSingles, GreatestSingles};
 use reqwest::{Client, redirect};
 use reqwest::header::{COOKIE, LOCATION};
 
@@ -52,6 +52,22 @@ pub(crate) async fn fetch_greatest_tapes(session: MMSession, page: u32, size: u3
 }
 
 #[command]
+pub(crate) async fn fetch_trending_singles(session: MMSession, page: u32, size: u32) -> Result<Value, Error> {
+    let req = reqwest::Client::new()
+        .get(mm_url(TrendingSingles))
+        .query(&[("page", page), ("size", size)]);
+    fetch(req, session).await
+}
+
+#[command]
+pub(crate) async fn fetch_greatest_singles(session: MMSession, page: u32, size: u32) -> Result<Value, Error> {
+    let req = reqwest::Client::new()
+        .get(mm_url(GreatestSingles))
+        .query(&[("page", page), ("size", size)]);
+    fetch(req, session).await
+}
+
+#[command]
 pub(crate) async fn fetch_album_details(session: MMSession, album_id: u32) -> Result<Value, Error> {
     let path = format!("{}{}", mm_url(AlbumDetails), album_id);
     let req = reqwest::Client::new().get(path);
@@ -59,8 +75,15 @@ pub(crate) async fn fetch_album_details(session: MMSession, album_id: u32) -> Re
 }
 
 #[command]
+pub(crate) async fn fetch_single_details(session: MMSession, single_id: u32) -> Result<Value, Error> {
+    let path = format!("{}{}", mm_url(SingleDetails), single_id);
+    let req = reqwest::Client::new().get(path);
+    fetch(req, session).await
+}
+
+#[command]
 pub(crate) async fn fetch_song_location(session: MMSession, song_id: u32) -> Result<Value, Error> {
-    let path = format!("{}{}/stream", mm_url(SongDetails), song_id);
+    let path = format!("{}{}/stream", mm_url(SingleDetails), song_id);
     let response = Client::builder()
         .redirect(redirect::Policy::none())
         .build()?

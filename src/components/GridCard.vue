@@ -1,30 +1,28 @@
 <template>
   <n-card class="h-full" content-style="padding: 0;">
     <div class="cover-container">
-      <div class="title select">{{ album.name }}</div>
+      <div class="title select">{{ content.name }}</div>
       <div class="overlay"></div>
 
-      <img :src="album.smallCoverUrl" class="cover" alt="cover" />
+      <img :src="content.smallCoverUrl" class="cover" alt="cover" />
     </div>
     <div class="artists select">
-      {{ album.mainArtists }}
+      {{ content.mainArtists }}
     </div>
   </n-card>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { Album } from "@/models/album";
 
 @Options({
   props: {
-    album: {
-      type: Album,
+    content: {
       required: true,
     },
   },
 })
-export default class AlbumCard extends Vue {}
+export default class GridCard extends Vue {}
 </script>
 
 <style lang="scss" scoped>

@@ -4,7 +4,7 @@ import AlbumListView from "@/views/abstract/AlbumListView.vue";
 import { MMSession } from "@/models/backend/mm-session";
 import store from "@/store";
 import { Album } from "@/models/album";
-import AlbumCard from "@/components/AlbumCard.vue";
+import GridCard from "@/components/GridCard.vue";
 
 @Options({
   computed: {
@@ -13,17 +13,16 @@ import AlbumCard from "@/components/AlbumCard.vue";
   },
   watch: {
     session() {
-      this.fetchAlbums();
-    },
-    albums() {
-      this.loading = false;
+      this.fetchContent();
     },
   },
   components: {
-    AlbumCard,
+    GridCard,
   },
 })
 export default class Latest extends AlbumListView {
+  singles = [];
+
   fetchFn(payload: MMSession): Promise<void> {
     return store.dispatch.fetchLatest(payload);
   }

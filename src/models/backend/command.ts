@@ -11,7 +11,10 @@ export enum Command {
   FetchLatest = "fetch_latest",
   FetchTrendingTapes = "fetch_trending_tapes",
   FetchGreatestTapes = "fetch_greatest_tapes",
+  FetchTrendingSingles = "fetch_trending_singles",
+  FetchGreatestSingles = "fetch_greatest_singles",
   FetchAlbumDetails = "fetch_album_details",
+  FetchSingleDetails = "fetch_single_details",
   FetchSongLocation = "fetch_song_location",
 }
 

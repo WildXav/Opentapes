@@ -13,10 +13,10 @@ pub(crate) enum MMEndpoint {
     Latest,
     TrendingMixtapes,
     GreatestMixtapes,
-    TrendingSongs,
-    GreatestSongs,
+    TrendingSingles,
+    GreatestSingles,
     AlbumDetails,
-    SongDetails,
+    SingleDetails,
 }
 
 pub(crate) fn mm_url(endpoint: MMEndpoint) -> String {
@@ -26,10 +26,10 @@ pub(crate) fn mm_url(endpoint: MMEndpoint) -> String {
         MMEndpoint::Latest => format!("{}/api/albums/just-added", BASE_URL),
         MMEndpoint::TrendingMixtapes => format!("{}/api/albums/trending", BASE_URL),
         MMEndpoint::GreatestMixtapes => format!("{}/api/albums/best", BASE_URL),
-        MMEndpoint::TrendingSongs => format!("{}/api/songs/trending", BASE_URL),
-        MMEndpoint::GreatestSongs => format!("{}/api/songs/best", BASE_URL),
+        MMEndpoint::TrendingSingles => format!("{}/api/songs/trending", BASE_URL),
+        MMEndpoint::GreatestSingles => format!("{}/api/songs/best", BASE_URL),
         MMEndpoint::AlbumDetails => format!("{}/api/albums/", BASE_URL),
-        MMEndpoint::SongDetails => format!("{}/api/songs/", BASE_URL),
+        MMEndpoint::SingleDetails => format!("{}/api/songs/", BASE_URL),
     }
 }
 

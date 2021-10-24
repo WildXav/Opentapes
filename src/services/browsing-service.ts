@@ -1,6 +1,7 @@
 import { Album } from "@/models/album";
 import { MMSession } from "@/models/backend/mm-session";
 import { Command, execCmd } from "@/models/backend/command";
+import { Single } from "@/models/single";
 
 export abstract class BrowsingService {
   static fetchFeatured(
@@ -69,5 +70,43 @@ export abstract class BrowsingService {
       args,
       retryCb
     ).then((jsonArray) => jsonArray.map((jsonValue) => new Album(jsonValue)));
+  }
+
+  static fetchTrendingSingles(
+    session: MMSession,
+    page: number,
+    size: number,
+    retryCb?: () => unknown
+  ): Promise<Array<Single>> {
+    const args = {
+      session,
+      page,
+      size,
+    };
+
+    return execCmd<Array<Record<string, unknown>>>(
+      Command.FetchTrendingSingles,
+      args,
+      retryCb
+    ).then((jsonArray) => jsonArray.map((jsonValue) => new Single(jsonValue)));
+  }
+
+  static fetchGreatestSingles(
+    session: MMSession,
+    page: number,
+    size: number,
+    retryCb?: () => unknown
+  ): Promise<Array<Single>> {
+    const args = {
+      session,
+      page,
+      size,
+    };
+
+    return execCmd<Array<Record<string, unknown>>>(
+      Command.FetchGreatestSingles,
+      args,
+      retryCb
+    ).then((jsonArray) => jsonArray.map((jsonValue) => new Single(jsonValue)));
   }
 }

@@ -244,8 +244,10 @@ export default class Player extends Vue {
   resume(): void {
     if (this.audio.ended) {
       this.setPlaybackPosition(0);
+      setTimeout(() => this.audio.play(), 200);
+    } else {
+      this.audio.play();
     }
-    this.audio.play();
   }
 
   pause(): void {
