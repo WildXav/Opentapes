@@ -26,6 +26,17 @@ A convergent/adaptive app for streaming Hip-Hop mixtapes hosted on MyMixtapez.co
   <img src="https://codeberg.org/xaviers/Opentapes/media/branch/main/screenshot.png"/>
 </p>
 
+## Installation
+Note: I'm still working on making Opentapes available to more Linux distros.
+### Releases
+Releases for Linux (.deb) & Windows (x64 installer) can be found in the [releases page](https://codeberg.org/xaviers/Opentapes/releases).
+
+### Repositories
+#### Arch Linux (AUR)
+```
+yay -S opentapes-bin
+```
+
 ## Building from source
 ### Set up Tauri and its dependencies
 1. Refer to [Tauri's official documentation](https://tauri.studio/en/docs/getting-started/intro) to install Tauri, Node.js & Rust.
@@ -45,4 +56,7 @@ yarn build && cd src-tauri && cargo tauri build
 
 ## Contributing
 
-Bug reports, pull requests, and ideas are all welcomed.
+Bug reports, pull requests, and ideas are welcomed.
+
+## License
+[![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.html) 
