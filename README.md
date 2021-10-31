@@ -5,25 +5,25 @@
 <p align="center">
 <img src="https://img.shields.io/badge/Release-0.1.0-blue">
 &nbsp;
-<a href="https://v3.vuejs.org/" target="_blank">
+<a href="https://v3.vuejs.org/">
     <img src="https://img.shields.io/badge/Vue-3.0-green">
 </a>
 &nbsp;
-<a href="https://tauri.studio/" target="_blank">
+<a href="https://tauri.studio/">
     <img src="https://img.shields.io/badge/Tauri-1.0.0%20beta%208-yellowgreen">
 </a>
 </p>
 
 <p align="center">
 A convergent/adaptive app for streaming Hip-Hop mixtapes hosted on MyMixtapez.com.
-<br>Built with <a href="https://v3.vuejs.org/" target="_blank">Vue.js</a>,
-<a href="https://tauri.studio/" target="_blank">Tauri</a> &
-<a href="https://www.naiveui.com/" target="_blank">Naive UI</a>.
+<br>Built with <a href="https://v3.vuejs.org/">Vue.js</a>,
+<a href="https://tauri.studio/">Tauri</a> &
+<a href="https://www.naiveui.com/">Naive UI</a>.
 <br>Made with ♥. 
 </p>
 
 <p align="center">
-  <img src="https://codeberg.org/xaviers/Opentapes/media/branch/main/screenshot.png"/>
+  <img src="https://codeberg.org/xaviers/Opentapes/media/branch/main/resources/screenshot.png"/>
 </p>
 
 ## Installation
@@ -57,6 +57,10 @@ yarn build && cd src-tauri && cargo tauri build
 ## Contributing
 
 Bug reports, pull requests, and ideas are welcomed.
+
+Please consider donating with [LiberaPay](https://liberapay.com/xaviers/) if you enjoyed Opentapes.
+
+<a href="https://liberapay.com/xaviers/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
 
 ## License
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.html) 
