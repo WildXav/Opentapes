@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Opentapes
-Comment=A convergent/adaptive app for streaming Hip-Hop mixtapes. Made with Vue.js & Tauri.
+Comment=A convergent/adaptive app for streaming Hip-Hop mixtapes.
 Exec=opentapes
 Icon=opentapes
 Terminal=false
