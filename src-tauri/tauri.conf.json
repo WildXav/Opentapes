@@ -23,9 +23,9 @@
       ],
       "resources": [],
       "externalBin": [],
-      "copyright": "GPL-3.0-only",
+      "copyright": "GPL-3.0",
       "category": "Music",
-      "shortDescription": "A convergent/adaptive app for streaming Hip-Hop mixtapes. Made with Vue.js & Tauri.",
+      "shortDescription": "A convergent/adaptive app for streaming Hip-Hop mixtapes.",
       "deb": {
         "depends": [],
         "useBootstrapper": false

@@ -15,8 +15,7 @@ finish-args:
   - --socket=pulseaudio
   - --share=network
 build-options:
-  append-path: /usr/lib/sdk/node16/bin
-  prepend-path: /usr/lib/sdk/rust-stable/bin
+  append-path: /usr/lib/sdk/node16/bin:/usr/lib/sdk/rust-stable/bin
   build-args:
     - --share=network
   env:
@@ -34,15 +33,11 @@ modules:
         type: dir
     buildsystem: simple
     build-commands:
-      - npm install
-      - npm run build
+      - yarn install
+      - yarn build
       - cargo install tauri-cli --version 1.0.0-beta.7
       - cargo tauri build
-      - mkdir -p /app/share/applications
-      - mkdir -p /app/share/metainfo
-      - cp resources/sh.xaviers.Opentapes.desktop /app/share/applications/
-      - cp resources/sh.xaviers.Opentapes.appdata.xml /app/share/metainfo/
-      # Remove the 512x512@2x icon as it has an incorrect size (issue with Tauri's bundler)
-      - rm -r src-tauri/target/release/bundle/deb/*/data/usr/share/icons/hicolor/512x512@2x
-      - cp -R src-tauri/target/release/bundle/deb/*/data/usr/share/icons /app/share/
       - install -Dm755 -t /app/bin/ src-tauri/target/release/bundle/deb/*/data/usr/bin/opentapes
+      - install -Dm644 -t /app/share/applications/ resources/sh.xaviers.Opentapes.desktop
+      - install -Dm644 -t /app/share/metainfo/ resources/sh.xaviers.Opentapes.appdata.xml
+      - for i in 16 32 128 256 512;do install -Dm644 src-tauri/target/release/bundle/deb/*/data/usr/share/icons/hicolor/${i}x${i}/apps/opentapes.png /app/share/icons/hicolor/${i}x${i}/apps/opentapes.png;done
