@@ -25,3 +25,5 @@ pnpm-debug.log*
 # Flatpak
 .flatpak-builder
 build-dir
+cargo-sources.json
+node-sources.json
