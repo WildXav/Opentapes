@@ -27,7 +27,6 @@ fn main() {
                     let win_attrs = win_attrs
                         .title("Opentapes")
                         .resizable(true)
-                        .decorations(true)
                         .fullscreen(false)
                         .inner_size(1024.0, 768.0)
                         .min_inner_size(320.0, 320.0)

@@ -22,15 +22,26 @@
       />
 
       <n-menu
-        v-if="false"
         :collapsed="collapsed"
         :collapsed-width="config.sidenavCollapsedWidth"
         :collapsed-icon-size="config.sidenavIconSize"
         :options="secondaryMenuOptions"
-        value=""
+        @update:value="onSecondaryMenuValueUpdate"
       />
     </n-space>
   </n-layout-sider>
+
+  <n-modal
+    v-model:show="showSettingsModal"
+    title="Settings"
+    preset="card"
+    class="max-w-xs md:max-w-md"
+    size="huge"
+    :bordered="false"
+    @on-close="close"
+  >
+    <Settings />
+  </n-modal>
 </template>
 
 <script lang="ts">
@@ -39,8 +50,10 @@ import { CONFIG } from "@/config";
 import { ROUTES, routesToMenuOption } from "@/router/routes";
 import { renderIcon } from "@/helpers/render-helper";
 import { SettingsOutline } from "@vicons/ionicons5";
+import Settings from "@/components/Settings.vue";
 
 @Options({
+  components: { Settings },
   props: {
     static: Boolean,
   },
@@ -61,5 +74,13 @@ export default class Sidenav extends Vue {
     },
   ];
   collapsed = true;
+  showSettingsModal = false;
+
+  onSecondaryMenuValueUpdate(key: string): void {
+    switch (key) {
+      case "settings":
+        this.showSettingsModal = true;
+    }
+  }
 }
 </script>

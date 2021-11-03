@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider class="flex flex-col h-full w-full" :theme="darkTheme">
+  <n-config-provider class="flex flex-col h-full w-full">
     <n-layout has-sider>
       <Sidenav :static="staticSidenav" />
 
