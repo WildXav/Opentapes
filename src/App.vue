@@ -149,7 +149,7 @@ export default class Home extends Vue {
 
   mounted(): void {
     this.$nextTick(() => {
-      invoke(Command.ShowWindow);
+      // invoke(Command.ShowWindow);
       store.dispatch.setIsLoadingSession(true);
     });
 

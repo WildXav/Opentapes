@@ -30,9 +30,7 @@ fn main() {
                         .decorations(true)
                         .fullscreen(false)
                         .inner_size(1024.0, 768.0)
-                        .min_inner_size(320.0, 320.0)
-                        .decorations(!hide_decoration)
-                        .visible(false);
+                        .min_inner_size(320.0, 320.0);
                     (win_attrs, webview_attrs)
                 }).unwrap();
             Ok(())
