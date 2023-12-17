@@ -58,9 +58,5 @@ yarn build && cd src-tauri && cargo tauri build
 
 Bug reports, pull requests, and ideas are welcomed.
 
-Please consider donating with [LiberaPay](https://liberapay.com/xaviers/) if you enjoyed Opentapes.
-
-<a href="https://liberapay.com/xaviers/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
-
 ## License
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.html) 
